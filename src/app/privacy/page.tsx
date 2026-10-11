@@ -46,7 +46,8 @@ export default function Privacy() {
 
       <h2>Analytics</h2>
       <p>
-        We use Vercel Web Analytics to count visits to the site, which helps us see whether it is working. We remove the
+        We use Vercel Web Analytics to count visits to the site and Vercel Speed Insights to measure how fast pages
+        load, which helps us see whether it is working. We remove the
         part of the address after the <code>#</code>, any query string, and the secret&apos;s id before anything is
         sent, so the analytics never receive a key or an id. Pages such as a secret link are recorded only as{" "}
         <code>/m/[id]</code>. Vercel describes what it collects, and how it avoids cookies, in its own documentation.
@@ -69,7 +70,7 @@ export default function Privacy() {
 
       <h2>Service providers</h2>
       <p>
-        The site runs on Vercel (including Vercel Web Analytics) and keeps encrypted data in Upstash Redis. These
+        The site runs on Vercel (including Vercel Web Analytics and Speed Insights) and keeps encrypted data in Upstash Redis. These
         providers process technical data such as IP addresses to deliver the service, under their own policies.
       </p>
 
