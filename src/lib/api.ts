@@ -1,8 +1,15 @@
 import { b64urlEncode, MAX_CIPHERTEXT_CHARS } from "./crypto";
+import { getStore } from "./store";
 
 export const ID_RE = /^[A-Za-z0-9_-]{22}$/;
 const B64URL_RE = /^[A-Za-z0-9_-]+$/;
 export const MAX_HINT = 80;
+export const MAX_BODY_BYTES = 1_000_000;
+
+/** Counts one hit per client per hour for `bucket`; true once `max` is exceeded. */
+export async function rateLimited(req: Request, bucket: string, max: number): Promise<boolean> {
+  return (await getStore().hit(`${bucket}:${clientIp(req)}`, 3600)) > max;
+}
 
 export function newId(): string {
   return b64urlEncode(crypto.getRandomValues(new Uint8Array(16)));

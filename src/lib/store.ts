@@ -81,7 +81,8 @@ export function getStore(): Store {
   if (url && token) {
     g.__store = new UpstashStore(new Redis({ url, token }));
   } else {
-    if (process.env.NODE_ENV === "production") {
+    // ALLOW_MEMORY_STORE is for testing a production build locally; never set it on a real deploy.
+    if (process.env.NODE_ENV === "production" && !process.env.ALLOW_MEMORY_STORE) {
       throw new Error("Redis is not configured (UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN)");
     }
     g.__store = new MemoryStore();

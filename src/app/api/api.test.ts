@@ -78,4 +78,32 @@ describe("create validation", () => {
     expect(last).toBe(429);
     expect((await create(post({ ct }, "8.8.8.8"))).status).toBe(201);
   });
+
+  it("rejects an oversized body by Content-Length without reading it", async () => {
+    const req = new Request("http://x/api/create", {
+      method: "POST",
+      headers: { "content-type": "application/json", "content-length": "2000000" },
+      body: JSON.stringify({ ct: "A".repeat(40) }),
+    });
+    expect((await create(req)).status).toBe(413);
+  });
+});
+
+describe("read endpoint rate limits", () => {
+  const withIp = (ip: string, method = "GET") =>
+    new Request("http://x", { method, headers: { "x-forwarded-for": ip } });
+
+  it("limits meta lookups per IP", async () => {
+    const { id } = await make();
+    let last = 0;
+    for (let i = 0; i < 301; i++) last = (await meta(withIp("7.7.7.7"), ctx(id))).status;
+    expect(last).toBe(429);
+    expect((await meta(withIp("6.6.6.6"), ctx(id))).status).toBe(200);
+  });
+
+  it("limits open attempts per IP", async () => {
+    let last = 0;
+    for (let i = 0; i < 121; i++) last = (await open(withIp("5.5.5.5", "POST"), ctx("A".repeat(22)))).status;
+    expect(last).toBe(429);
+  });
 });

@@ -1,14 +1,15 @@
-import { clientIp, json, newId, validateCreate } from "@/lib/api";
+import { json, MAX_BODY_BYTES, newId, rateLimited, validateCreate } from "@/lib/api";
 import { getStore } from "@/lib/store";
 
-const LIMIT_PER_HOUR = 30;
-
 export async function POST(req: Request) {
-  const store = getStore();
-
-  if ((await store.hit(`create:${clientIp(req)}`, 3600)) > LIMIT_PER_HOUR) {
+  // Refuse oversized bodies before reading them. (A missing header is still caught by validateCreate.)
+  if (Number(req.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) {
+    return json({ error: "Message is too large" }, 413);
+  }
+  if (await rateLimited(req, "create", 30)) {
     return json({ error: "Too many secrets from your network. Try again later." }, 429);
   }
+  const store = getStore();
 
   let body: unknown;
   try {
