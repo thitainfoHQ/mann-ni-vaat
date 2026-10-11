@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Baloo_2, Baloo_Bhai_2, Hind, Hind_Vadodara } from "next/font/google";
 import { LangProvider } from "@/lib/i18n";
 import Shell from "@/components/Shell";
+import AnalyticsScrubbed from "@/components/AnalyticsScrubbed";
 import "./globals.css";
 
 // Each script gets its own purpose-made family; the CSS picks the order per language.
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <LangProvider>
           <Shell>{children}</Shell>
         </LangProvider>
+        <AnalyticsScrubbed />
       </body>
     </html>
   );

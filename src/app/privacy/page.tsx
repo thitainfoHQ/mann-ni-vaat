@@ -44,6 +44,14 @@ export default function Privacy() {
         advertising trackers. Your chosen language is saved in your own browser only.
       </p>
 
+      <h2>Analytics</h2>
+      <p>
+        We use Vercel Web Analytics to count visits to the site, which helps us see whether it is working. We remove the
+        part of the address after the <code>#</code>, any query string, and the secret&apos;s id before anything is
+        sent, so the analytics never receive a key or an id. Pages such as a secret link are recorded only as{" "}
+        <code>/m/[id]</code>. Vercel describes what it collects, and how it avoids cookies, in its own documentation.
+      </p>
+
       <h2>What we cannot protect you from</h2>
       <ul className="space-y-2">
         <li>
@@ -61,8 +69,8 @@ export default function Privacy() {
 
       <h2>Service providers</h2>
       <p>
-        The site runs on Vercel and keeps encrypted data in Upstash Redis. These providers process technical data such
-        as IP addresses to deliver the service, under their own policies.
+        The site runs on Vercel (including Vercel Web Analytics) and keeps encrypted data in Upstash Redis. These
+        providers process technical data such as IP addresses to deliver the service, under their own policies.
       </p>
 
       <h2>Contact</h2>
