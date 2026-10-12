@@ -13,7 +13,7 @@ Purpose statement (shown on site): learning, education and entertainment only.
 
 | Topic | Decision |
 |---|---|
-| Name | Mann Ni Vaat (મનની વાત), final. Domain candidates: mannivaat.in, mannnivaat.com |
+| Name | Mann Ni Vaat (મનની વાત), final. Domain: **mannivaat.in** (purchased) |
 | Content | Sender sends **one** of: typed text they write themselves, or a drawing. No ready-made messages |
 | Access | Anyone with the link (link only) |
 | Optional extra lock | Secret passphrase (+ optional hint), shared separately by the sender |
@@ -30,7 +30,7 @@ Purpose statement (shown on site): learning, education and entertainment only.
 2. Choose the type: **Write a message** or **Draw** (one only).
 3. Optional: set a **secret phrase** + optional **hint**.
 4. Tick the consent box (see section 6), then tap "Create secret link".
-5. The browser encrypts the content, uploads the ciphertext, and shows the link `https://<domain>/m/<id>#<key>`.
+5. The browser encrypts the content, uploads the ciphertext, and shows the link `https://mannivaat.in/m/<id>#<key>`.
 6. Share buttons: WhatsApp, copy link. Warning text: "This link works once. Whoever opens it first sees it."
 
 ### Receiver
@@ -110,13 +110,13 @@ Next.js (App Router) + TypeScript, Tailwind, Vercel, Upstash Redis (`@upstash/re
 
 ## 11. Cost
 
-- Start: free (Vercel Hobby + Upstash free tier + free `*.vercel.app` URL). Check current limits before launch.
-- Optional domain: about ₹100 to 800 per year.
+- Start: free (Vercel Hobby + Upstash free tier + `*.vercel.app` URL until the domain is connected). Check current limits before launch.
+- Domain: mannivaat.in, already purchased; renews yearly (check the registrar for the renewal price).
 - If it goes viral: expect a few dollars per month for Redis and bandwidth.
 
 ## 12. Open items before building
 
-1. Domain choice (`dilkaraaz.in` or `.com`; both appeared unregistered in a DNS check, confirm on a registrar).
+1. (Resolved) Domain: mannivaat.in, purchased. Remaining: connect it to Vercel and set `NEXT_PUBLIC_SITE_URL=https://mannivaat.in`.
 2. Contact email for abuse reports and the policy pages.
 3. (Resolved) No default messages; senders write their own. Abuse/contact email: info@thitainfo.com.
 4. (Resolved) One type per message only: text or drawing.

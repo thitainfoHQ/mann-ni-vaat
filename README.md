@@ -30,14 +30,15 @@ Copy `.env.example` to `.env.local`.
 | Variable | Purpose |
 |---|---|
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis. The Vercel Marketplace integration adds these for you. |
-| `NEXT_PUBLIC_SITE_URL` | Public address, used for the link-preview image. |
+| `NEXT_PUBLIC_SITE_URL` | Public address (`https://mannivaat.in`), used for the link-preview image. |
 
 ## Deploy (Vercel + Upstash)
 
 1. Import this repo in Vercel.
 2. Add the Upstash Redis integration from the Vercel Marketplace and connect it to the project.
-3. Set `NEXT_PUBLIC_SITE_URL` to the live address.
-4. Deploy, then send and open a secret on the live site with two different devices.
+3. Add the domain `mannivaat.in` in Vercel (Project Settings, Domains) and set the DNS records it shows at your registrar.
+4. Set `NEXT_PUBLIC_SITE_URL` to `https://mannivaat.in`.
+5. Deploy, then send and open a secret on the live site with two different devices.
 
 ## How the flow works
 
