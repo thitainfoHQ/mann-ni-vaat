@@ -24,7 +24,9 @@ export default function Composer() {
   const [error, setError] = useState("");
   const [result, setResult] = useState<{ url: string; phrase: boolean } | null>(null);
   const [copied, setCopied] = useState(false);
+  const [consentMissing, setConsentMissing] = useState(false);
   const draw = useRef<DrawHandle>(null);
+  const consentRef = useRef<HTMLLabelElement>(null);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -41,7 +43,11 @@ export default function Composer() {
       payload = { v: 1, kind: "drawing", lang, image };
     }
     if (usePhrase && phrase.trim().length < 4) return setError(t.errPhraseShort);
-    if (!consent) return setError(t.errConsent);
+    if (!consent) {
+      setConsentMissing(true);
+      consentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return setError(t.errConsent);
+    }
 
     setBusy(true);
     try {
@@ -80,6 +86,7 @@ export default function Composer() {
     setHint("");
     setUsePhrase(false);
     setConsent(false);
+    setConsentMissing(false);
     setCopied(false);
   }
 
@@ -164,16 +171,36 @@ export default function Composer() {
         )}
       </div>
 
-      <div className="mt-6 rounded-[18px] border border-raat-line p-4">
-        <label className="flex min-h-11 cursor-pointer items-center gap-3 font-semibold">
-          <input
-            type="checkbox"
-            checked={usePhrase}
-            onChange={(e) => setUsePhrase(e.target.checked)}
-            className="size-5 accent-[#f4b83d]"
-          />
-          {t.phraseToggle}
-        </label>
+      <section aria-labelledby="phrase-title" className="mt-6 rounded-[18px] border border-dashed border-raat-line p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 id="phrase-title" className="font-display text-lg font-bold">
+              {t.phraseToggle}
+            </h2>
+            <p className="mt-0.5 text-sm text-abhla-dim">{t.phraseIntro}</p>
+          </div>
+          <span className="shrink-0 rounded-full border border-raat-line px-2.5 py-0.5 text-xs font-semibold text-abhla-dim">
+            {t.optionalBadge}
+          </span>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={usePhrase}
+          aria-labelledby="phrase-title"
+          onClick={() => setUsePhrase(!usePhrase)}
+          className="mt-3 flex min-h-11 w-full items-center gap-3 text-left"
+        >
+          <span
+            aria-hidden="true"
+            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${usePhrase ? "bg-haldi" : "bg-raat-line"}`}
+          >
+            <span
+              className={`absolute top-0.5 size-6 rounded-full bg-white transition-all ${usePhrase ? "left-[22px]" : "left-0.5"}`}
+            />
+          </span>
+          <span className="text-sm font-semibold">{usePhrase ? t.switchOn : t.switchOff}</span>
+        </button>
         {usePhrase && (
           <div className="mt-3 space-y-4">
             <p className="text-sm text-abhla-dim">{t.phraseHelp}</p>
@@ -206,26 +233,44 @@ export default function Composer() {
             </div>
           </div>
         )}
-      </div>
+      </section>
 
-      <label className="mt-6 flex cursor-pointer items-start gap-3 text-sm">
-        <input
-          type="checkbox"
-          checked={consent}
-          onChange={(e) => setConsent(e.target.checked)}
-          className="mt-0.5 size-5 shrink-0 accent-[#f4b83d]"
-        />
-        <span>
-          {t.consent}{" "}
+      <section
+        aria-labelledby="agree-title"
+        className={`mt-6 rounded-[18px] border p-4 transition-colors ${consentMissing ? "border-bandhani bg-bandhani/10" : "border-raat-line"}`}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <h2 id="agree-title" className="font-display text-lg font-bold">
+            {t.beforeCreate}
+          </h2>
+          <span className="shrink-0 rounded-full bg-haldi px-2.5 py-0.5 text-xs font-bold text-raat-deep">
+            {t.requiredBadge}
+          </span>
+        </div>
+        <label ref={consentRef} className="mt-3 flex cursor-pointer items-start gap-3 text-sm">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => {
+              setConsent(e.target.checked);
+              if (e.target.checked) setConsentMissing(false);
+            }}
+            aria-invalid={consentMissing}
+            className="mt-0.5 size-5 shrink-0 accent-[#f4b83d]"
+          />
+          <span>{t.consent}</span>
+        </label>
+        <p className="mt-2 pl-8 text-sm text-abhla-dim">
+          {t.readFirst}{" "}
           <Link href="/privacy" target="_blank" className="text-haldi underline underline-offset-4">
             {t.privacy}
           </Link>
-          {", "}
+          {" · "}
           <Link href="/terms" target="_blank" className="text-haldi underline underline-offset-4">
             {t.terms}
           </Link>
-        </span>
-      </label>
+        </p>
+      </section>
 
       <button type="submit" disabled={busy} className={`${btnPrimary} mt-6 w-full`}>
         {busy ? t.creating : t.create}

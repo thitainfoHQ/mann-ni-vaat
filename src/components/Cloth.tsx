@@ -2,6 +2,9 @@
 
 import type { ReactNode } from "react";
 
+// Deliberately English in every language: short, universal, and the one cue people need on the cloth.
+const TAP_LABEL = "Tap to open";
+
 const COLS = 7;
 const ROWS = 9;
 
@@ -42,6 +45,7 @@ export default function Cloth({
   onTap?: () => void;
   children: ReactNode;
 }) {
+  const interactive = !untied && !!onTap;
   return (
     <div className={`relative isolate overflow-hidden rounded-[22px] bg-raat-deep ${untied ? "untied" : ""}`}>
       <div className="relative z-0 flex min-h-[26rem] flex-col justify-center p-6">{children}</div>
@@ -49,7 +53,19 @@ export default function Cloth({
       <div
         className={`cloth absolute inset-0 z-10 ${untied ? "pointer-events-none" : onTap ? "cursor-pointer" : ""}`}
         onClick={untied ? undefined : onTap}
-        aria-hidden="true"
+        {...(interactive
+          ? {
+              role: "button",
+              tabIndex: 0,
+              "aria-label": TAP_LABEL,
+              onKeyDown: (e: React.KeyboardEvent) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onTap?.();
+                }
+              },
+            }
+          : { "aria-hidden": true })}
       >
         <div className="grid h-full w-full place-items-center" style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)`, gridTemplateRows: `repeat(${ROWS}, 1fr)` }}>
           {cells.map((delay, i) => (
@@ -57,8 +73,15 @@ export default function Cloth({
           ))}
         </div>
         <div className="absolute inset-0 grid place-items-center">
-          <Knot />
+          <span className={interactive ? "knot-pulse grid place-items-center rounded-full" : "grid place-items-center"}>
+            <Knot />
+          </span>
         </div>
+        {interactive && (
+          <span className="tap-pill absolute inset-x-0 bottom-[16%] mx-auto w-fit rounded-full bg-haldi px-5 py-2 font-display text-lg font-bold text-raat-deep shadow-lg">
+            {TAP_LABEL}
+          </span>
+        )}
       </div>
     </div>
   );

@@ -22,7 +22,6 @@ export default function Home() {
           {t.demoAgain}
         </button>
       </Cloth>
-      {!untied && <p className="mt-2 text-center text-sm text-abhla-dim">{t.demoHint}</p>}
 
       <h1 className="mt-8 text-4xl font-bold sm:text-5xl">{t.tagline}</h1>
       <p className="mt-3 max-w-[34ch] text-abhla-dim">{t.intro}</p>

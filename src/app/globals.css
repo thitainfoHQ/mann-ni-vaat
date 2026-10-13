@@ -93,7 +93,32 @@ h3 {
     opacity 420ms ease-in;
 }
 
+/* "Tap to open" cue: the knot breathes with a gold ring and the pill bobs. */
+.knot-pulse {
+  animation: knot-ring 1.8s ease-out infinite;
+}
+.tap-pill {
+  animation: pill-bob 1.8s ease-in-out infinite;
+}
+@keyframes knot-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgb(244 184 61 / 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 26px rgb(244 184 61 / 0);
+  }
+}
+@keyframes pill-bob {
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .knot-pulse,
+  .tap-pill {
+    animation: none;
+  }
   .rosette,
   .cloth,
   .knot {
