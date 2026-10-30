@@ -16,12 +16,14 @@
 }
 
 :root {
-  --font-display-stack: var(--f-baloo2), var(--f-baloobhai), system-ui, sans-serif;
-  --font-body-stack: var(--f-hind), var(--f-vadodara), system-ui, sans-serif;
+  --font-noto: var(--f-n-bn), var(--f-n-pa), var(--f-n-or), var(--f-n-ta), var(--f-n-te), var(--f-n-kn), var(--f-n-ml),
+    var(--f-n-ar), var(--f-n-sat), var(--f-n-mni);
+  --font-display-stack: var(--f-baloo2), var(--f-baloobhai), var(--font-noto), system-ui, sans-serif;
+  --font-body-stack: var(--f-hind), var(--f-vadodara), var(--font-noto), system-ui, sans-serif;
 }
 html[lang="gu"] {
-  --font-display-stack: var(--f-baloobhai), var(--f-baloo2), system-ui, sans-serif;
-  --font-body-stack: var(--f-vadodara), var(--f-hind), system-ui, sans-serif;
+  --font-display-stack: var(--f-baloobhai), var(--f-baloo2), var(--font-noto), system-ui, sans-serif;
+  --font-body-stack: var(--f-vadodara), var(--f-hind), var(--font-noto), system-ui, sans-serif;
 }
 
 html {

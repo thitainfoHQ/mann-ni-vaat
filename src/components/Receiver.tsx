@@ -6,6 +6,7 @@ import Cloth from "@/components/Cloth";
 import { btnPrimary, errorText, field } from "@/components/ui";
 import { decryptPayload, type Payload } from "@/lib/crypto";
 import { useT } from "@/lib/i18n";
+import { parseLinkFragment } from "@/lib/languages";
 
 type Meta = { hasPassphrase: boolean; salt?: string; hint?: string };
 type Phase = "checking" | "gone" | "incomplete" | "ready" | "opened";
@@ -25,7 +26,7 @@ export default function Receiver({ id }: { id: string }) {
   const fetched = useRef<string | null>(null);
 
   useEffect(() => {
-    const key = location.hash.slice(1);
+    const { key } = parseLinkFragment(location.hash);
     if (key.length < 40) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPhase("incomplete");

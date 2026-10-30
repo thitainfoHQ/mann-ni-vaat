@@ -38,7 +38,7 @@ The security model drives the structure. Keep these invariants when changing any
   - `next.config.ts` sets `Referrer-Policy: no-referrer` and a strict CSP (production only; `connect-src 'self'`), so any third-party script or beacon needs a deliberate CSP change and a Privacy page update.
   - `src/lib/analytics.ts` `sanitizeUrl` strips the `#key`, the query and the secret id before Vercel Analytics / Speed Insights see a URL (`AnalyticsScrubbed.tsx`). Any new tracker (e.g. a Meta Pixel) must not load on `/m/*`.
   - `/m/[id]` is `noindex`.
-- **i18n:** `src/lib/i18n.tsx` holds `en`, `hi`, `gu` dictionaries; `hi` and `gu` are typed `typeof en`, so every new string must be added to all three. Hindi/Gujarati copy needs native-speaker review. Fonts per script are set in `layout.tsx` and `globals.css`.
+- **i18n:** 23 languages. `src/lib/languages.ts` is the registry (codes, native names, `rtl`, `draft`). UI text is `src/lib/locales/<code>.ts` and Privacy/Terms text is `src/lib/locales/legal/<code>.ts`, both typed against `en` and lazy-loaded through `locales/loaders.ts`. A new UI string must be added to every language file; `locales.test.ts` fails otherwise (and checks the legal pages keep the same structure, `{email}` token and code spans). Draft languages are hidden from the picker. The sender's language rides in the link fragment (`#key.lang`, parsed by `parseLinkFragment`). Use logical Tailwind classes (`ps-`, `text-start`, `start-`) so RTL works. `next/font` options must be literals (no spread).
 - **Styling:** Tailwind 4 via `@tailwindcss/turbopack` (configured in `next.config.ts`). Theme tokens (raat, haldi, bandhani, abhla…) are in `globals.css`; shared class strings are in `src/components/ui.ts`.
 
 ## Conventions

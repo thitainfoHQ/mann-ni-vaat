@@ -1,4 +1,4 @@
-# Mann Ni Vaat (મનની વાત): Product Spec (v0.4)
+# Mann Ni Vaat (મનની વાત): Product Spec (v0.5)
 
 Name meaning: "What is in my heart/mind", a warm Gujarati phrase for something you want to tell one person. Use the Gujarati script (મનની વાત) in the logo and headings, with "Mann Ni Vaat" as the roman wordmark. Not affiliated with any radio programme or government body; keep the tone personal and romantic.
 Tagline: *Mann ni vaat, bas ek vaar.* (What is in my heart, just once.)
@@ -19,7 +19,7 @@ Purpose statement (shown on site): learning, education and entertainment only.
 | Optional extra lock | Secret passphrase (+ optional hint), shared separately by the sender |
 | Lifetime | Unopened: auto-deleted after 7 days. Opened: deleted immediately |
 | Sender notification | None |
-| Languages | English, Hindi, Gujarati |
+| Languages | English + the 22 Eighth Schedule languages (as, bn, brx, doi, gu, hi, kn, ks, kok, mai, ml, mni, mr, ne, or, pa, sa, sat, sd, ta, te, ur). Privacy and Terms translated too. Bodo, Kashmiri, Santali and Manipuri stay hidden as drafts until a native speaker supplies or checks them |
 | Accounts / login | None |
 | Hosting | Vercel (free Hobby plan to start) + Upstash Redis |
 
@@ -93,7 +93,7 @@ Must cover:
 - Drawing canvas: pen, colour palette, eraser, undo, clear, stamps (diya, heart, dandiya).
 - Open Graph preview card for the link that shows a generic "A secret is waiting" image and **no** message info.
 - Accessibility: the cloth is a real button (keyboard Enter/Space, screen-reader label "Tap to open"); animations are off under `prefers-reduced-motion`. Optional and required controls are visually distinct (dashed "Optional" card with a switch vs solid "Required" card with a checkbox).
-- Language switcher (EN / हिन्दी / ગુજરાતી) on every page. The interface is translated; message content is whatever the sender writes.
+- Language picker (a dropdown showing each language in its own script) on every page. The interface and the legal pages are translated; message content is whatever the sender writes. Urdu, Kashmiri and Sindhi are right-to-left. The sender's language travels in the link (`#key.lang`) as the receiver's default.
 
 ## 8. Virality hooks (in scope for v1)
 

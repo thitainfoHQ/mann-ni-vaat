@@ -61,7 +61,7 @@ export default function Composer() {
       if (res.status === 429) return setError(t.errRate);
       if (!res.ok) return setError(res.status === 400 ? t.errTooLarge : t.errGeneric);
       const { id } = (await res.json()) as { id: string };
-      setResult({ url: `${location.origin}/m/${id}#${key}`, phrase: usePhrase });
+      setResult({ url: `${location.origin}/m/${id}#${key}.${lang}`, phrase: usePhrase });
     } catch (err) {
       setError(err instanceof TypeError ? t.errNetwork : t.errGeneric);
     } finally {
@@ -159,7 +159,7 @@ export default function Composer() {
               placeholder={t.messagePlaceholder}
               className={`${field} resize-y`}
             />
-            <p className="mt-1 text-right text-sm text-abhla-dim">
+            <p className="mt-1 text-end text-sm text-abhla-dim">
               {text.length}/{MAX_TEXT}
             </p>
           </div>
@@ -189,14 +189,14 @@ export default function Composer() {
           aria-checked={usePhrase}
           aria-labelledby="phrase-title"
           onClick={() => setUsePhrase(!usePhrase)}
-          className="mt-3 flex min-h-11 w-full items-center gap-3 text-left"
+          className="mt-3 flex min-h-11 w-full items-center gap-3 text-start"
         >
           <span
             aria-hidden="true"
             className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${usePhrase ? "bg-haldi" : "bg-raat-line"}`}
           >
             <span
-              className={`absolute top-0.5 size-6 rounded-full bg-white transition-all ${usePhrase ? "left-[22px]" : "left-0.5"}`}
+              className={`absolute top-0.5 size-6 rounded-full bg-white transition-all ${usePhrase ? "start-[22px]" : "start-0.5"}`}
             />
           </span>
           <span className="text-sm font-semibold">{usePhrase ? t.switchOn : t.switchOff}</span>
@@ -260,7 +260,7 @@ export default function Composer() {
           />
           <span>{t.consent}</span>
         </label>
-        <p className="mt-2 pl-8 text-sm text-abhla-dim">
+        <p className="mt-2 ps-8 text-sm text-abhla-dim">
           {t.readFirst}{" "}
           <Link href="/privacy" target="_blank" className="text-haldi underline underline-offset-4">
             {t.privacy}

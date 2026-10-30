@@ -6,7 +6,7 @@ Send a secret message or drawing that opens once and then disappears. Built for 
 - Opens exactly once. The server deletes the ciphertext in the same step that hands it out.
 - Unopened secrets expire after 7 days.
 - Optional secret phrase (PBKDF2 + HKDF) that the receiver needs on top of the link.
-- English, Hindi and Gujarati.
+- 23 languages: English plus the 22 languages of India's Eighth Schedule (see below). Privacy and Terms are translated too.
 
 See [SPEC.md](./SPEC.md) for the full design.
 
@@ -46,11 +46,22 @@ Copy `.env.example` to `.env.local`.
 2. The receiver opens `/m/<id>#<key>`. The page calls `GET /api/meta/<id>` (never deletes anything, so link-preview bots are harmless).
 3. Tapping "Untie the knot" calls `POST /api/open/<id>`, which atomically returns and deletes the ciphertext. The browser decrypts it locally.
 
+## Languages
+
+English, Assamese, Bengali, Bodo, Dogri, Gujarati, Hindi, Kannada, Kashmiri, Konkani, Maithili, Malayalam, Manipuri (Meitei), Marathi, Nepali, Odia, Punjabi, Sanskrit, Santali, Sindhi, Tamil, Telugu, Urdu.
+
+- UI text lives in `src/lib/locales/<code>.ts` and the Privacy/Terms text in `src/lib/locales/legal/<code>.ts`. English is the source of truth; `yarn test` fails if a language misses a string or changes the legal structure.
+- Each language is its own chunk, loaded only when chosen. Fonts for each script are only downloaded when that script appears on screen.
+- Urdu, Kashmiri and Sindhi switch the page to right-to-left.
+- Secret links look like `/m/<id>#<key>.<lang>`. The sender's language becomes the receiver's default (a language the receiver already chose wins).
+- **Draft languages** (`draft: true` in `src/lib/languages.ts`): Bodo, Kashmiri, Santali and Manipuri are hidden from the picker until a native speaker has written or checked them (Santali and Manipuri are still English placeholders). Set `NEXT_PUBLIC_SHOW_DRAFT_LANGS=1` to see them.
+- All translations, including Hindi and Gujarati, should be reviewed by native speakers before launch.
+
 ## What it cannot do
 
 It cannot stop screenshots or someone photographing the screen. Anyone with the link (and the phrase, if set) can open it, once. The Privacy Policy and Terms say this plainly.
 
 ## Notes
 
-- Hindi and Gujarati text should be reviewed by a native speaker.
+- Every non-English translation should be reviewed by a native speaker (see Languages).
 - This repo is public, so never commit `.env*` files with real values.

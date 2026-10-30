@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CONTACT_EMAIL } from "@/lib/config";
-import { LANGS, useT } from "@/lib/i18n";
+import { PICKER_LANGS, useT, type Lang } from "@/lib/i18n";
 
 export default function Shell({ children }: { children: ReactNode }) {
   const { lang, setLang, t } = useT();
@@ -14,23 +14,18 @@ export default function Shell({ children }: { children: ReactNode }) {
         <Link href="/" className="font-display text-xl font-bold leading-none text-abhla">
           {t.brandScript}
         </Link>
-        <div role="group" aria-label={t.langLabel} className="flex overflow-hidden rounded-lg border border-raat-line">
-          {LANGS.map((l) => (
-            <button
-              key={l.code}
-              type="button"
-              lang={l.code}
-              aria-label={l.name}
-              aria-pressed={lang === l.code}
-              onClick={() => setLang(l.code)}
-              className={`min-h-10 min-w-11 px-3 text-sm font-semibold transition-colors ${
-                lang === l.code ? "bg-haldi text-raat-deep" : "text-abhla-dim hover:text-abhla"
-              }`}
-            >
-              {l.label}
-            </button>
+        <select
+          aria-label={t.langLabel}
+          value={lang}
+          onChange={(e) => setLang(e.target.value as Lang)}
+          className="min-h-10 max-w-[10rem] rounded-lg border border-raat-line bg-raat-deep px-3 text-sm font-semibold text-abhla"
+        >
+          {PICKER_LANGS.map((l) => (
+            <option key={l.code} value={l.code} lang={l.code}>
+              {l.name}
+            </option>
           ))}
-        </div>
+        </select>
       </header>
 
       <main className="flex-1">{children}</main>
