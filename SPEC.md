@@ -1,4 +1,4 @@
-# Mann Ni Vaat (મનની વાત): Product Spec (v0.3)
+# Mann Ni Vaat (મનની વાત): Product Spec (v0.4)
 
 Name meaning: "What is in my heart/mind", a warm Gujarati phrase for something you want to tell one person. Use the Gujarati script (મનની વાત) in the logo and headings, with "Mann Ni Vaat" as the roman wordmark. Not affiliated with any radio programme or government body; keep the tone personal and romantic.
 Tagline: *Mann ni vaat, bas ek vaar.* (What is in my heart, just once.)
@@ -28,15 +28,15 @@ Purpose statement (shown on site): learning, education and entertainment only.
 ### Sender
 1. Home: pick language, tap "Send a secret".
 2. Choose the type: **Write a message** or **Draw** (one only).
-3. Optional: set a **secret phrase** + optional **hint**.
-4. Tick the consent box (see section 6), then tap "Create secret link".
+3. Optional: switch on **"Add a secret phrase"** (an extra password for the receiver) + optional **hint**. This card is marked "Optional" and uses a toggle switch.
+4. Under "Before you create the link" (marked "Required"), tick the consent box (see section 6), then tap "Create secret link". If the box is not ticked, that card is highlighted and scrolled into view.
 5. The browser encrypts the content, uploads the ciphertext, and shows the link `https://mannivaat.in/m/<id>#<key>`.
 6. Share buttons: WhatsApp, copy link. Warning text: "This link works once. Whoever opens it first sees it."
 
 ### Receiver
 1. Opens the link. The page loads with a themed "A secret is waiting for you" screen. **No message data is fetched yet.**
 2. If a phrase was set, the page shows the hint and a phrase box.
-3. Taps the diya to reveal. The browser fetches the ciphertext (server deletes it in that same step), decrypts locally, and shows the message or drawing with an animation.
+3. Taps the knotted cloth (a gold "Tap to open" pill and a pulsing ring on the knot show that it is tappable; the pill stays in English in every language) or the "Untie the knot" button to reveal. The browser fetches the ciphertext (server deletes it in that same step), decrypts locally, and shows the message or drawing with an animation.
 4. Leaving or refreshing the page loses it for good. Reopening the link shows "This secret is gone."
 
 ## 3. Cryptography
@@ -92,6 +92,7 @@ Must cover:
 - Mobile first (most traffic will arrive from WhatsApp). Fast on cheap phones, light JS.
 - Drawing canvas: pen, colour palette, eraser, undo, clear, stamps (diya, heart, dandiya).
 - Open Graph preview card for the link that shows a generic "A secret is waiting" image and **no** message info.
+- Accessibility: the cloth is a real button (keyboard Enter/Space, screen-reader label "Tap to open"); animations are off under `prefers-reduced-motion`. Optional and required controls are visually distinct (dashed "Optional" card with a switch vs solid "Required" card with a checkbox).
 - Language switcher (EN / हिन्दी / ગુજરાતી) on every page. The interface is translated; message content is whatever the sender writes.
 
 ## 8. Virality hooks (in scope for v1)
