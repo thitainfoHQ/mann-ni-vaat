@@ -71,6 +71,10 @@ English, Assamese, Bengali, Bodo, Dogri, Gujarati, Hindi, Kannada, Kashmiri, Kon
 - **Draft languages** (`draft: true` in `src/lib/languages.ts`): Bodo, Kashmiri, Santali and Manipuri are hidden from the picker until a native speaker has written or checked them (Santali and Manipuri are still English placeholders). Set `NEXT_PUBLIC_SHOW_DRAFT_LANGS=1` to see them.
 - All translations, including Hindi and Gujarati, should be reviewed by native speakers before launch.
 
+## Visual design
+
+The idea is a letter tied in a potli (bandhani bundle). A night-sky page with a faint diya glow; the **paper** (`.paper`, `.ruled` in `globals.css`) is the only light surface and is used for the message; the **torana** (`.torana`, a string of bandhani dots) divides header and footer; the cloth has a sheen and a shorter `compact` form for the home page. The composer keeps the message first and folds look, secret phrase and schedule into one quiet list (`Row` in `Composer.tsx`). Fonts stay Baloo/Hind because they cover the scripts we support; change the scale, not the families. Check any layout change with a long-script language (Malayalam, Tamil) and a right-to-left one (Urdu).
+
 ## Look and feel details
 
 - **Icons:** the knot logo is `src/app/icon.svg` (also exported as `src/app/favicon.ico`, `src/app/apple-icon.png`, `public/icon-192.png` and `public/icon-512.png`). Re-export the PNG/ICO from the SVG if you change the logo. `src/app/manifest.ts` lets people add the site to their home screen.

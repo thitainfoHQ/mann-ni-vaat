@@ -23,6 +23,8 @@ ALLOW_MEMORY_STORE=1 yarn start   # try a prod build locally without Redis; neve
 
 Tests are node-environment vitest; `@/` is aliased to `src/`. API tests call the route handlers directly with `Request` objects and swap the store via `__setStore(new MemoryStore())`.
 
+- **Look:** dark night page; `.paper`/`.ruled` for the message letter (only light surface), `.torana` divider, themeable cloth (`--cloth-*`). Use logical Tailwind classes (`ps-`, `start-`, `text-start`) for right-to-left, and keep tap targets at least 44px.
+
 ## Routing layout (two root layouts)
 
 - `src/app/(app)/` is the root layout for `/`, `/new`, `/m/[id]`, `/mine`, `/privacy`, `/terms`, `/safety` (language chosen in the browser).

@@ -6,15 +6,18 @@ import Knot from "@/components/Knot";
 import type { Theme } from "@/lib/themes";
 
 const COLS = 7;
-const ROWS = 9;
 
 // Dots dissolve outward from the knot at the centre: delay grows with distance.
-const cells = Array.from({ length: COLS * ROWS }, (_, i) => {
-  const c = i % COLS;
-  const r = Math.floor(i / COLS);
-  const dist = Math.hypot(c - (COLS - 1) / 2, r - (ROWS - 1) / 2);
-  return Math.round(dist * 85);
-});
+function makeCells(rows: number) {
+  return Array.from({ length: COLS * rows }, (_, i) => {
+    const c = i % COLS;
+    const r = Math.floor(i / COLS);
+    return Math.round(Math.hypot(c - (COLS - 1) / 2, r - (rows - 1) / 2) * 85);
+  });
+}
+// Rows follow the cloth's height so the dots stay evenly spaced.
+const FULL = { rows: 9, cells: makeCells(9) };
+const SHORT = { rows: 5, cells: makeCells(5) };
 
 /**
  * A secret tied up in bandhani cloth. `untied` dissolves the dots, then the cloth,
@@ -24,18 +27,22 @@ export default function Cloth({
   untied,
   onTap,
   theme = "classic",
+  compact = false,
   children,
 }: {
   untied: boolean;
   onTap?: () => void;
   theme?: Theme;
+  /** A shorter cloth for the home page demo; the receiver needs room for the whole message. */
+  compact?: boolean;
   children: ReactNode;
 }) {
   const { t } = useT();
   const interactive = !untied && !!onTap;
+  const { rows, cells } = compact ? SHORT : FULL;
   return (
-    <div className={`relative isolate overflow-hidden rounded-[22px] bg-raat-deep theme-${theme} ${untied ? "untied" : ""}`}>
-      <div className="relative z-0 flex min-h-[26rem] flex-col justify-center p-6">{children}</div>
+    <div className={`relative isolate overflow-hidden rounded-[26px] bg-raat-deep shadow-[0_26px_60px_-28px_var(--cloth-bg)] theme-${theme} ${untied ? "untied" : ""}`}>
+      <div className={`relative z-0 flex ${compact ? "min-h-[17rem]" : "min-h-[26rem]"} flex-col justify-center p-6`}>{children}</div>
 
       <div
         className={`cloth absolute inset-0 z-10 ${untied ? "pointer-events-none" : onTap ? "cursor-pointer" : ""}`}
@@ -54,7 +61,7 @@ export default function Cloth({
             }
           : { "aria-hidden": true })}
       >
-        <div className="grid h-full w-full place-items-center" style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)`, gridTemplateRows: `repeat(${ROWS}, 1fr)` }}>
+        <div className="grid h-full w-full place-items-center" style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)`, gridTemplateRows: `repeat(${rows}, 1fr)` }}>
           {cells.map((delay, i) => (
             <span key={i} className="rosette" style={{ ["--d" as string]: `${delay}ms` }} />
           ))}

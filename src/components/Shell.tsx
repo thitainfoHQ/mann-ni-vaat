@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Suspense, useEffect, type ReactNode } from "react";
+import Knot from "@/components/Knot";
 import { CONTACT_EMAIL } from "@/lib/config";
 import { PICKER_LANGS, useT, type Dict, type Lang } from "@/lib/i18n";
 import { HOME_LANGS, homePath } from "@/lib/seo";
@@ -85,14 +86,18 @@ export default function Shell({ children }: { children: ReactNode }) {
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-4 pb-8">
-      <header className="flex items-center justify-between py-4">
-        <Link href="/" className="font-display text-xl font-bold leading-none text-abhla">
-          {t.brandScript}
-        </Link>
-        {/* usePathname() needs a Suspense boundary on dynamic routes; the fallback looks the same. */}
-        <Suspense fallback={<LangSelect onPick={setLang} />}>
-          <LangPicker />
-        </Suspense>
+      <header className="pt-4">
+        <div className="flex items-center justify-between pb-3">
+          <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-bold leading-none text-abhla">
+            <Knot className="size-8" />
+            {t.brandScript}
+          </Link>
+          {/* usePathname() needs a Suspense boundary on dynamic routes; the fallback looks the same. */}
+          <Suspense fallback={<LangSelect onPick={setLang} />}>
+            <LangPicker />
+          </Suspense>
+        </div>
+        <div className="torana" aria-hidden="true" />
       </header>
 
       <Suspense fallback={null}>
@@ -100,7 +105,8 @@ export default function Shell({ children }: { children: ReactNode }) {
       </Suspense>
       <main className="flex-1">{children}</main>
 
-      <footer className="mt-12 border-t border-raat-line pt-5 text-sm text-abhla-dim">
+      <footer className="mt-14 text-sm text-abhla-dim">
+        <div className="torana mb-5" aria-hidden="true" />
         <nav className="flex flex-wrap gap-x-5 gap-y-2">
           <Link href="/privacy" className="underline-offset-4 hover:text-abhla hover:underline">
             {t.privacy}
