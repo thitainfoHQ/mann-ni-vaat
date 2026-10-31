@@ -1,4 +1,4 @@
-# Mann Ni Vaat (મનની વાત): Product Spec (v0.8)
+# Mann Ni Vaat (મનની વાત): Product Spec (v0.9)
 
 Name meaning: "What is in my heart/mind", a warm Gujarati phrase for something you want to tell one person. Use the Gujarati script (મનની વાત) in the logo and headings, with "Mann Ni Vaat" as the roman wordmark. Not affiliated with any radio programme or government body; keep the tone personal and romantic.
 Tagline: *Mann ni vaat, bas ek vaar.* (What is in my heart, just once.)
@@ -91,6 +91,13 @@ Must cover:
 - English home at `/`; every finished language has `/<code>` (e.g. `/hi`, `/gu`), pre-rendered in that language with translated title and description (tagline and intro), canonical URL, `hreflang` alternates and an Open Graph card. `/sitemap.xml` and `/robots.txt` are generated. Draft languages are not published.
 - The picker moves between home addresses on the home pages only. Secret links, the composer and policy pages keep one address.
 - Landing on `/hi` remembers Hindi for the rest of the site.
+
+## 6d. Search and AI answer engines
+
+- Home page carries visible "How it works" steps and an FAQ (English, Hindi, Gujarati so far), mirrored as `FAQPage` JSON-LD with Organization, WebSite and WebApplication. Claims must match the product (language count is asserted by a test).
+- Occasion landing pages `/for/<occasion>` (birthday, anniversary, diwali, sorry, miss-you), English only, each linking to `/new?theme=<look>`.
+- `/llms.txt`, `/sitemap.xml`, `/robots.txt`, canonical URLs and hreflang on every indexable page.
+- To do: translate the FAQ and occasion pages into the remaining languages; Search Console / Bing submission; consider an `/about` page with the security design for people who want details.
 
 ## 6a. Scheduled reveal, looks, My secrets
 

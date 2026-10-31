@@ -10,7 +10,6 @@ export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Mann Ni Vaat · મનની વાત",
   description,
-  icons: { icon: "/favicon.ico" },
   openGraph: { title: "Mann Ni Vaat · મનની વાત", description, siteName: "Mann Ni Vaat", type: "website" },
   twitter: { card: "summary_large_image", title: "Mann Ni Vaat", description },
 };

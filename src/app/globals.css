@@ -146,7 +146,24 @@ h3 {
   }
 }
 
+/* Loading state: the knot turns slowly. */
+.loading-knot {
+  animation: knot-turn 2.4s ease-in-out infinite;
+}
+@keyframes knot-turn {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(0.92);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .loading-knot,
   .knot-pulse,
   .tap-pill {
     animation: none;

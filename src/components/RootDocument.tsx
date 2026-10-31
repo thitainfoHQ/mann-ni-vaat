@@ -8,7 +8,8 @@ import "@/app/globals.css";
 /** The <html> and <body> shared by both root layouts (English pages and the per-language home pages). */
 export default function RootDocument({ lang, children }: { lang: Lang; children: ReactNode }) {
   return (
-    <html lang={lang} dir={dirFor(lang)} className={fontClasses}>
+    // The inline background stops a white flash before the stylesheet arrives.
+    <html lang={lang} dir={dirFor(lang)} className={fontClasses} style={{ backgroundColor: "#15143a" }}>
       <body className="min-h-dvh">
         {children}
         <AnalyticsScrubbed />

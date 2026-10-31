@@ -1,4 +1,3 @@
-import { notFound, permanentRedirect } from "next/navigation";
 import Shell from "@/components/Shell";
 import RootDocument from "@/components/RootDocument";
 import { LangProvider } from "@/lib/i18n";
@@ -17,8 +16,17 @@ export function generateStaticParams() {
 
 export default async function LangLayout({ children, params }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
-  if (lang === "en") permanentRedirect("/");
-  if (!isLang(lang) || !(HOME_LANGS as readonly string[]).includes(lang)) notFound();
+  // An unknown code (/xx) still renders the page, which answers 404 with the app's own not-found screen. "/en" is
+  // redirected to "/" in next.config.ts.
+  if (!isLang(lang) || !(HOME_LANGS as readonly string[]).includes(lang)) {
+    return (
+      <RootDocument lang="en">
+        <LangProvider>
+          <Shell>{children}</Shell>
+        </LangProvider>
+      </RootDocument>
+    );
+  }
   const dict = await loadDict(lang);
 
   return (

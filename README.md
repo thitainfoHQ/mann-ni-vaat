@@ -61,10 +61,21 @@ English, Assamese, Bengali, Bodo, Dogri, Gujarati, Hindi, Kannada, Kashmiri, Kon
 - UI text lives in `src/lib/locales/<code>.ts` and the Privacy/Terms text in `src/lib/locales/legal/<code>.ts`. English is the source of truth; `yarn test` fails if a language misses a string or changes the legal structure.
 - Each language is its own chunk, loaded only when chosen. Fonts for each script are only downloaded when that script appears on screen.
 - Urdu, Kashmiri and Sindhi switch the page to right-to-left.
+- **SEO and answer engines (GEO):**
+  - The home page shows a "How it works" section and an FAQ, as real visible text, and the same FAQ as `FAQPage` structured data; Organization, WebSite and WebApplication data is included too (`src/lib/jsonld.ts`). Text lives in `src/lib/locales/home/<code>.ts`; only English, Hindi and Gujarati exist so far, and other languages show no such section (rather than English on a translated page).
+  - `/for/birthday`, `/for/anniversary`, `/for/diwali`, `/for/sorry`, `/for/miss-you` are English landing pages that open the composer with the matching look (`src/lib/occasions.ts`).
+  - `/llms.txt` summarises the site for AI assistants. Keep its facts in step with the product. `robots.txt` allows all crawlers except for private paths; add AI-crawler rules there if you ever want to opt out of model training.
+  - After launch: set `NEXT_PUBLIC_SITE_URL`, submit `/sitemap.xml` in Google Search Console and Bing Webmaster Tools.
 - **Per-language home pages** for search: English at `/`, every finished language at `/hi`, `/gu`, `/mr`, ... (drafts get none). They are static and server-rendered in that language, with its own title, description, canonical URL and `hreflang` links, listed in `/sitemap.xml`. `/en` redirects to `/`. The language picker moves between these addresses on the home pages; everywhere else (`/new`, `/m/<id>`, ...) the address never changes. `robots.txt` hides `/m/`, `/mine` and `/api/`.
 - Secret links look like `/m/<id>#<key>.<lang>`. The sender's language becomes the receiver's default (a language the receiver already chose wins).
 - **Draft languages** (`draft: true` in `src/lib/languages.ts`): Bodo, Kashmiri, Santali and Manipuri are hidden from the picker until a native speaker has written or checked them (Santali and Manipuri are still English placeholders). Set `NEXT_PUBLIC_SHOW_DRAFT_LANGS=1` to see them.
 - All translations, including Hindi and Gujarati, should be reviewed by native speakers before launch.
+
+## Look and feel details
+
+- **Icons:** the knot logo is `src/app/icon.svg` (also exported as `src/app/favicon.ico`, `src/app/apple-icon.png`, `public/icon-192.png` and `public/icon-512.png`). Re-export the PNG/ICO from the SVG if you change the logo. `src/app/manifest.ts` lets people add the site to their home screen.
+- **Tab titles** follow the page and the chosen language (`titleFor` in `src/components/Shell.tsx`), including when the language is switched in place.
+- **Loading** shows the turning knot (`Loading`) instead of plain text or a blank page; the `<html>` background is set inline so there is no white flash. Unknown addresses show the app's own 404 (`global-not-found.tsx`, an experimental Next flag, plus `not-found.tsx` inside each layout). `/en` redirects to `/` from `next.config.ts`.
 
 ## Safety and reports
 

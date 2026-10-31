@@ -5,8 +5,9 @@ import { useState } from "react";
 import Cloth from "@/components/Cloth";
 import { btnPrimary, btnQuiet } from "@/components/ui";
 import { useT } from "@/lib/i18n";
+import type { HomeContent } from "@/lib/locales/home/types";
 
-export default function Home() {
+export default function Home({ content }: { content?: HomeContent | null }) {
   const { t } = useT();
   const [untied, setUntied] = useState(false);
 
@@ -43,6 +44,43 @@ export default function Home() {
           </li>
         ))}
       </ul>
+
+      {content && (
+        <>
+          <section aria-labelledby="how-title" className="mt-12">
+            <h2 id="how-title" className="text-2xl font-bold">
+              {content.howTitle}
+            </h2>
+            <ol className="mt-4 space-y-4">
+              {content.steps.map((step, i) => (
+                <li key={step.title} className="flex gap-3">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-haldi font-display font-bold text-raat-deep">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <h3 className="font-display text-lg font-bold">{step.title}</h3>
+                    <p className="text-abhla-dim">{step.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section aria-labelledby="faq-title" className="mt-12">
+            <h2 id="faq-title" className="text-2xl font-bold">
+              {content.faqTitle}
+            </h2>
+            <div className="mt-4 space-y-5">
+              {content.faq.map((f) => (
+                <div key={f.q}>
+                  <h3 className="font-display text-lg font-bold">{f.q}</h3>
+                  <p className="mt-1 text-abhla-dim">{f.a}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </>
+      )}
     </div>
   );
 }

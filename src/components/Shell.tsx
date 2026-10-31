@@ -2,10 +2,39 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Suspense, type ReactNode } from "react";
+import { Suspense, useEffect, type ReactNode } from "react";
 import { CONTACT_EMAIL } from "@/lib/config";
-import { PICKER_LANGS, useT, type Lang } from "@/lib/i18n";
+import { PICKER_LANGS, useT, type Dict, type Lang } from "@/lib/i18n";
 import { HOME_LANGS, homePath } from "@/lib/seo";
+
+const BRAND = "Mann Ni Vaat";
+
+/** The tab title for a page, in the reader's language. `null` means "leave the title the server set". */
+export function titleFor(path: string, t: Dict, lang: Lang): string | null {
+  if (path === "/new") return `${t.create} · ${BRAND}`;
+  if (path === "/mine") return `${t.mineTitle} · ${BRAND}`;
+  if (path === "/privacy") return `${t.privacy} · ${BRAND}`;
+  if (path === "/terms") return `${t.terms} · ${BRAND}`;
+  if (path === "/safety") return `${t.safetyLink} · ${BRAND}`;
+  if (path.startsWith("/m/")) return `${t.waitingTitle} · ${BRAND}`;
+  if (path === "/" && lang !== "en") return `${t.tagline} · ${BRAND}`;
+  if (/^\/[a-z]{2,3}$/.test(path)) return `${t.tagline} · ${BRAND}`;
+  return null;
+}
+
+/**
+ * Keeps the browser tab title matching the page and the chosen language, including when the language is switched
+ * without leaving the page. (The server already sends a title; this only follows later changes.)
+ */
+function PageTitle() {
+  const { t, lang } = useT();
+  const pathname = usePathname();
+  useEffect(() => {
+    const title = titleFor(pathname, t, lang);
+    if (title) document.title = title;
+  }, [pathname, t, lang]);
+  return null;
+}
 
 /** The language dropdown itself. `onPick` decides what choosing a language does. */
 function LangSelect({ onPick }: { onPick: (l: Lang) => void }) {
@@ -66,6 +95,9 @@ export default function Shell({ children }: { children: ReactNode }) {
         </Suspense>
       </header>
 
+      <Suspense fallback={null}>
+        <PageTitle />
+      </Suspense>
       <main className="flex-1">{children}</main>
 
       <footer className="mt-12 border-t border-raat-line pt-5 text-sm text-abhla-dim">

@@ -9,7 +9,7 @@ import { encryptPayload, generateLinkKey, type Payload } from "@/lib/crypto";
 import { useT } from "@/lib/i18n";
 import { fill, formatTime, MAX_SCHEDULE_MS, toLocalInput } from "@/lib/schedule";
 import { addSent } from "@/lib/sent";
-import { THEME_KEY, THEME_SWATCH, THEMES, type Theme } from "@/lib/themes";
+import { isTheme, THEME_KEY, THEME_SWATCH, THEMES, type Theme } from "@/lib/themes";
 
 type Kind = "text" | "drawing";
 const MAX_TEXT = 1000;
@@ -17,7 +17,8 @@ const MAX_HINT = 80;
 
 export default function Composer() {
   const { lang, t } = useT();
-  const [kind, setKind] = useState<Kind>(useSearchParams().get("type") === "drawing" ? "drawing" : "text");
+  const params = useSearchParams();
+  const [kind, setKind] = useState<Kind>(params.get("type") === "drawing" ? "drawing" : "text");
   const [text, setText] = useState("");
   const [usePhrase, setUsePhrase] = useState(false);
   const [phrase, setPhrase] = useState("");
@@ -25,7 +26,11 @@ export default function Composer() {
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [theme, setTheme] = useState<Theme>("classic");
+  // /new?theme=birthday comes from the occasion pages.
+  const [theme, setTheme] = useState<Theme>(() => {
+    const t = params.get("theme");
+    return isTheme(t) ? t : "classic";
+  });
   const [schedule, setSchedule] = useState(false);
   const [when, setWhen] = useState("");
   const [bounds, setBounds] = useState({ min: "", max: "" });

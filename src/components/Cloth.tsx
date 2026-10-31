@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useT } from "@/lib/i18n";
+import Knot from "@/components/Knot";
 import type { Theme } from "@/lib/themes";
 
 const COLS = 7;
@@ -14,22 +15,6 @@ const cells = Array.from({ length: COLS * ROWS }, (_, i) => {
   const dist = Math.hypot(c - (COLS - 1) / 2, r - (ROWS - 1) / 2);
   return Math.round(dist * 85);
 });
-
-function Knot() {
-  return (
-    <svg viewBox="0 0 64 64" className="knot size-16" aria-hidden="true">
-      <circle cx="32" cy="32" r="30" fill="var(--cloth-knot)" />
-      <path
-        d="M20 38c0-9 7-15 14-15 6 0 10 4 10 9 0 6-5 9-10 9-4 0-7-2-7-5 0-3 2-5 5-5"
-        fill="none"
-        stroke="var(--cloth-dot)"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-      />
-      <circle cx="32" cy="32" r="2.5" fill="var(--cloth-dot)" />
-    </svg>
-  );
-}
 
 /**
  * A secret tied up in bandhani cloth. `untied` dissolves the dots, then the cloth,
@@ -76,7 +61,7 @@ export default function Cloth({
         </div>
         <div className="absolute inset-0 grid place-items-center">
           <span className={interactive ? "knot-pulse grid place-items-center rounded-full" : "grid place-items-center"}>
-            <Knot />
+            <Knot className="knot size-16" />
           </span>
         </div>
         {interactive && (

@@ -27,10 +27,16 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    // English lives at "/", so "/en" (the only language code with no page of its own) goes there.
+    return [{ source: "/en", destination: "/", permanent: true }];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
   cacheComponents: true,
+  // A 404 in the app's own look for unmatched addresses (the app has two root layouts, so no single layout can do it).
+  experimental: { globalNotFound: true },
   partialPrefetching: true,
   turbopack: {
     rules: {

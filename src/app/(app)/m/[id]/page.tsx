@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Loading from "@/components/Loading";
 import Receiver from "@/components/Receiver";
 
 export const metadata = {
@@ -14,7 +15,7 @@ async function ReceiverForId({ params }: { params: PageProps<"/m/[id]">["params"
 
 export default function OpenSecret({ params }: PageProps<"/m/[id]">) {
   return (
-    <Suspense>
+    <Suspense fallback={<Loading />}>
       <ReceiverForId params={params} />
     </Suspense>
   );

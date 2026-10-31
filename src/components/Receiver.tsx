@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Cloth from "@/components/Cloth";
+import Loading from "@/components/Loading";
 import ReportPanel from "@/components/ReportPanel";
 import { btnPrimary, errorText, field } from "@/components/ui";
 import { decryptPayload, type Payload } from "@/lib/crypto";
@@ -114,7 +115,7 @@ export default function Receiver({ id }: { id: string }) {
   }
 
   if (phase === "checking") {
-    return <p className="pt-8 text-abhla-dim">{error || t.checking}</p>;
+    return <Loading label={error || t.checking} />;
   }
 
   if (phase === "gone" || phase === "incomplete") {
