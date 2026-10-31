@@ -23,6 +23,14 @@ ALLOW_MEMORY_STORE=1 yarn start   # try a prod build locally without Redis; neve
 
 Tests are node-environment vitest; `@/` is aliased to `src/`. API tests call the route handlers directly with `Request` objects and swap the store via `__setStore(new MemoryStore())`.
 
+## Routing layout (two root layouts)
+
+- `src/app/(app)/` is the root layout for `/`, `/new`, `/m/[id]`, `/mine`, `/privacy`, `/terms`, `/safety` (language chosen in the browser).
+- `src/app/[lang]/` is the root layout for the per-language home pages (`/hi`, `/gu`, ...): server-rendered in that language, seeded `LangProvider`, `hreflang`. `/en` redirects to `/`. Moving between the two root layouts is a full page load.
+- Shared pieces: `RootDocument` (html/body/fonts/analytics), `src/lib/seo.ts`, `src/lib/site.ts`, `Home` component, `src/lib/og.tsx`.
+- Each root layout needs its **own** `opengraph-image.tsx` (a file at `src/app/` root is not inherited by route groups). Both call `renderOgImage()`; keep the card free of anything about a secret.
+- **Run `yarn build` before pushing.** Dev mode misses prerender errors (`Date.now()` in render, `usePathname()` outside `<Suspense>`).
+
 ## Architecture
 
 The security model drives the structure. Keep these invariants when changing anything:

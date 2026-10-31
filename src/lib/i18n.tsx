@@ -31,12 +31,16 @@ function fromBrowser(): Lang {
   return "en";
 }
 
-export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en");
-  const [selected, setSelected] = useState<Lang>("en");
-  const [t, setT] = useState<Dict>(en);
+/**
+ * `initial` is used by the per-language home pages: the page is already in that language (so search engines
+ * and first paint see it), and the browser's saved or detected language must not replace it.
+ */
+export function LangProvider({ children, initial }: { children: ReactNode; initial?: { lang: Lang; dict: Dict } }) {
+  const [lang, setLangState] = useState<Lang>(initial?.lang ?? "en");
+  const [selected, setSelected] = useState<Lang>(initial?.lang ?? "en");
+  const [t, setT] = useState<Dict>(initial?.dict ?? en);
   const latest = useRef(0);
-  const applied = useRef<Lang>("en");
+  const applied = useRef<Lang>(initial?.lang ?? "en");
 
   // The picker updates at once; the text switches when the language's chunk arrives.
   // Only the newest request wins, so quick successive picks can't land out of order.
@@ -57,11 +61,18 @@ export function LangProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (initial) {
+      // Someone who lands on /hi chose Hindi: keep it for the rest of the site.
+      try {
+        localStorage.setItem(STORAGE_KEY, initial.lang);
+      } catch {}
+      return;
+    }
     // Language lives in localStorage, which the server can't read, so apply it after mount.
     // Order: the visitor's own choice, then the sender's language from a secret link (#key.lang), then the browser's.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     apply(saved() ?? parseLinkFragment(location.hash).lang ?? fromBrowser());
-  }, [apply]);
+  }, [apply, initial]);
 
   useEffect(() => {
     document.documentElement.lang = lang;

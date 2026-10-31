@@ -12,6 +12,8 @@ See [SPEC.md](./SPEC.md) for the full design.
 
 ## Run it
 
+**Always run `yarn build` before pushing.** `yarn dev` does not catch prerender errors (for example reading `Date.now()` or `usePathname()` outside Suspense in a client component), and they only fail on Vercel.
+
 ```bash
 yarn install
 yarn dev        # http://localhost:3000, uses an in-memory store
@@ -59,6 +61,7 @@ English, Assamese, Bengali, Bodo, Dogri, Gujarati, Hindi, Kannada, Kashmiri, Kon
 - UI text lives in `src/lib/locales/<code>.ts` and the Privacy/Terms text in `src/lib/locales/legal/<code>.ts`. English is the source of truth; `yarn test` fails if a language misses a string or changes the legal structure.
 - Each language is its own chunk, loaded only when chosen. Fonts for each script are only downloaded when that script appears on screen.
 - Urdu, Kashmiri and Sindhi switch the page to right-to-left.
+- **Per-language home pages** for search: English at `/`, every finished language at `/hi`, `/gu`, `/mr`, ... (drafts get none). They are static and server-rendered in that language, with its own title, description, canonical URL and `hreflang` links, listed in `/sitemap.xml`. `/en` redirects to `/`. The language picker moves between these addresses on the home pages; everywhere else (`/new`, `/m/<id>`, ...) the address never changes. `robots.txt` hides `/m/`, `/mine` and `/api/`.
 - Secret links look like `/m/<id>#<key>.<lang>`. The sender's language becomes the receiver's default (a language the receiver already chose wins).
 - **Draft languages** (`draft: true` in `src/lib/languages.ts`): Bodo, Kashmiri, Santali and Manipuri are hidden from the picker until a native speaker has written or checked them (Santali and Manipuri are still English placeholders). Set `NEXT_PUBLIC_SHOW_DRAFT_LANGS=1` to see them.
 - All translations, including Hindi and Gujarati, should be reviewed by native speakers before launch.

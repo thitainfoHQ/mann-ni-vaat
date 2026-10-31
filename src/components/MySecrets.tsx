@@ -12,7 +12,8 @@ import { THEME_KEY } from "@/lib/themes";
 export default function MySecrets() {
   const { t, lang } = useT();
   const [list, setList] = useState<SentEntry[] | null>(null);
-  const [checkedAt] = useState(() => Date.now());
+  // The current time is read after mount, never while prerendering.
+  const [checkedAt, setCheckedAt] = useState(0);
   const [copied, setCopied] = useState("");
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function MySecrets() {
       if (cancelled) return;
       saveSent(next);
       setList(next);
+      setCheckedAt(Date.now());
     });
     return () => {
       cancelled = true;

@@ -1,9 +1,7 @@
 import { ImageResponse } from "next/og";
 
 // One generic card for every page, including /m/<id> links. It must never carry anything about a secret.
-export const alt = "Mann Ni Vaat: a secret that opens once";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const OG_SIZE = { width: 1200, height: 630 };
 
 const COLS = 5;
 const ROWS = 5;
@@ -33,7 +31,7 @@ function Rosette({ x, y }: { x: number; y: number }) {
   );
 }
 
-export default function Image() {
+export function renderOgImage() {
   const cloth = 440;
   const stepX = cloth / COLS;
   const stepY = cloth / ROWS;
@@ -89,6 +87,6 @@ export default function Image() {
         </div>
       </div>
     ),
-    { ...size },
+    { ...OG_SIZE },
   );
 }

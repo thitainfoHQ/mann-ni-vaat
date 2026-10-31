@@ -1,4 +1,4 @@
-# Mann Ni Vaat (મનની વાત): Product Spec (v0.7)
+# Mann Ni Vaat (મનની વાત): Product Spec (v0.8)
 
 Name meaning: "What is in my heart/mind", a warm Gujarati phrase for something you want to tell one person. Use the Gujarati script (મનની વાત) in the logo and headings, with "Mann Ni Vaat" as the roman wordmark. Not affiliated with any radio programme or government body; keep the tone personal and romantic.
 Tagline: *Mann ni vaat, bas ek vaar.* (What is in my heart, just once.)
@@ -85,6 +85,12 @@ Must cover:
 - Deletion: on open, or at 7 days.
 - Contact / abuse report address: info@thitainfo.com.
 - Recommend a quick legal review if it grows beyond a hobby project.
+
+## 6c. Search and per-language home pages
+
+- English home at `/`; every finished language has `/<code>` (e.g. `/hi`, `/gu`), pre-rendered in that language with translated title and description (tagline and intro), canonical URL, `hreflang` alternates and an Open Graph card. `/sitemap.xml` and `/robots.txt` are generated. Draft languages are not published.
+- The picker moves between home addresses on the home pages only. Secret links, the composer and policy pages keep one address.
+- Landing on `/hi` remembers Hindi for the rest of the site.
 
 ## 6a. Scheduled reveal, looks, My secrets
 
