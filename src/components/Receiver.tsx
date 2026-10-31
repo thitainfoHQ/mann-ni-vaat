@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Cloth from "@/components/Cloth";
+import ReportPanel from "@/components/ReportPanel";
 import { btnPrimary, errorText, field } from "@/components/ui";
 import { decryptPayload, type Payload } from "@/lib/crypto";
 import { useT } from "@/lib/i18n";
@@ -119,6 +120,9 @@ export default function Receiver({ id }: { id: string }) {
         <div className="mt-6">
           <h1 className="text-3xl font-bold">{t.waitingTitle}</h1>
           <p className="mt-2 max-w-[44ch] text-abhla-dim">{t.waitingBody}</p>
+          <p role="note" className="mt-4 max-w-[44ch] rounded-xl border border-haldi/40 bg-haldi/10 p-3 text-sm">
+            {t.safetyNotice}
+          </p>
 
           {meta?.hasPassphrase && (
             <div className="mt-5">
@@ -157,6 +161,7 @@ export default function Receiver({ id }: { id: string }) {
           <Link href="/new" className={`${btnPrimary} mt-5`}>
             {t.sendBack}
           </Link>
+          {payload && <ReportPanel payload={payload} />}
         </div>
       )}
     </div>

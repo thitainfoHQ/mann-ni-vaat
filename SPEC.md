@@ -1,4 +1,4 @@
-# Mann Ni Vaat (મનની વાત): Product Spec (v0.5)
+# Mann Ni Vaat (મનની વાત): Product Spec (v0.6)
 
 Name meaning: "What is in my heart/mind", a warm Gujarati phrase for something you want to tell one person. Use the Gujarati script (મનની વાત) in the logo and headings, with "Mann Ni Vaat" as the roman wordmark. Not affiliated with any radio programme or government body; keep the tone personal and romantic.
 Tagline: *Mann ni vaat, bas ek vaar.* (What is in my heart, just once.)
@@ -36,7 +36,7 @@ Purpose statement (shown on site): learning, education and entertainment only.
 ### Receiver
 1. Opens the link. The page loads with a themed "A secret is waiting for you" screen. **No message data is fetched yet.**
 2. If a phrase was set, the page shows the hint and a phrase box.
-3. Taps the knotted cloth (a gold "Tap to open" pill and a pulsing ring on the knot show that it is tappable; the pill stays in English in every language) or the "Untie the knot" button to reveal. The browser fetches the ciphertext (server deletes it in that same step), decrypts locally, and shows the message or drawing with an animation.
+3. Taps the knotted cloth (a gold "Tap to open" pill and a pulsing ring on the knot show that it is tappable; the pill is translated in every language) or the "Untie the knot" button to reveal. The browser fetches the ciphertext (server deletes it in that same step), decrypts locally, and shows the message or drawing with an animation.
 4. Leaving or refreshing the page loses it for good. Reopening the link shows "This secret is gone."
 
 ## 3. Cryptography
@@ -85,6 +85,14 @@ Must cover:
 - Deletion: on open, or at 7 days.
 - Contact / abuse report address: info@thitainfo.com.
 - Recommend a quick legal review if it grows beyond a hobby project.
+
+## 6b. Abuse and safety
+
+- Receiver page shows a warning before opening: anyone can send, the sender is unknown, never share OTPs/passwords/money.
+- Links inside secrets are plain text, never clickable.
+- "Report this secret" after opening: the receiver chooses to send the decrypted text or drawing plus a reason (scam, abuse, illegal, other) to `POST /api/report`. Stored 60 days, no sender/receiver/network details, rate limited. This is the only way content ever reaches us.
+- `/safety` page (English for now) and a Safety link in the footer. Privacy Policy (all languages) describes reports.
+- Not possible by design: scanning secrets, identifying senders, recovering a secret from its link.
 
 ## 7. Look and feel
 

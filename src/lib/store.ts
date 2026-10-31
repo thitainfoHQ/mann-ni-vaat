@@ -1,8 +1,20 @@
 import { Redis } from "@upstash/redis";
+import { b64urlEncode } from "./crypto";
 
 export const TTL_SECONDS = 7 * 24 * 60 * 60;
 
 export type Meta = { hasPassphrase: boolean; salt?: string; hint?: string };
+
+/** A secret the receiver chose to share with us because it was abusive, a scam or illegal. */
+export type Report = {
+  reason: "scam" | "abuse" | "illegal" | "other";
+  kind: "text" | "drawing";
+  text?: string;
+  image?: string;
+  at: number;
+};
+
+export const REPORT_TTL_SECONDS = 60 * 24 * 60 * 60;
 
 export interface Store {
   put(id: string, ct: string, meta: Meta): Promise<void>;
@@ -11,12 +23,15 @@ export interface Store {
   take(id: string): Promise<string | null>;
   /** Increments a counter that expires after `windowSeconds`; returns the new count. */
   hit(key: string, windowSeconds: number): Promise<number>;
+  /** Keeps a report for REPORT_TTL_SECONDS. No sender, receiver or network details are stored with it. */
+  addReport(report: Report): Promise<void>;
 }
 
 class MemoryStore implements Store {
   private msgs = new Map<string, { ct: string; exp: number }>();
   private metas = new Map<string, { meta: Meta; exp: number }>();
   private hits = new Map<string, { n: number; exp: number }>();
+  readonly reports: Report[] = [];
 
   async put(id: string, ct: string, meta: Meta) {
     const exp = Date.now() + TTL_SECONDS * 1000;
@@ -33,6 +48,9 @@ class MemoryStore implements Store {
     this.msgs.delete(id);
     this.metas.delete(id);
     return m && m.exp >= Date.now() ? m.ct : null;
+  }
+  async addReport(report: Report) {
+    this.reports.push(report);
   }
   async hit(key: string, windowSeconds: number) {
     const now = Date.now();
@@ -63,6 +81,10 @@ class UpstashStore implements Store {
     const ct = await this.redis.getdel<string>(`msg:${id}`);
     await this.redis.del(`meta:${id}`);
     return ct ?? null;
+  }
+  async addReport(report: Report) {
+    const key = `report:${report.at}:${b64urlEncode(crypto.getRandomValues(new Uint8Array(6)))}`;
+    await this.redis.set(key, JSON.stringify(report), { ex: REPORT_TTL_SECONDS });
   }
   async hit(key: string, windowSeconds: number) {
     const k = `rl:${key}`;

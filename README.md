@@ -57,6 +57,13 @@ English, Assamese, Bengali, Bodo, Dogri, Gujarati, Hindi, Kannada, Kashmiri, Kon
 - **Draft languages** (`draft: true` in `src/lib/languages.ts`): Bodo, Kashmiri, Santali and Manipuri are hidden from the picker until a native speaker has written or checked them (Santali and Manipuri are still English placeholders). Set `NEXT_PUBLIC_SHOW_DRAFT_LANGS=1` to see them.
 - All translations, including Hindi and Gujarati, should be reviewed by native speakers before launch.
 
+## Safety and reports
+
+- The receiver page warns that anyone can send a secret and nobody can tell who (never share OTPs, passwords or money). `/safety` explains how to stay safe and how to report.
+- After opening a secret, the receiver can tap **Report this secret**, pick a reason and send it to us. Only then do we receive the content, and nothing identifying goes with it. `POST /api/report` is rate limited (10 per IP per hour).
+- Reports are stored in Redis as `report:<timestamp>:<random>` keys with a 60-day expiry. Read them in the Upstash console (Data Browser, search `report:*`). Memory store (dev) keeps them in `store.reports`.
+- Review reports regularly and block abusers (Vercel Firewall IP rules). Add a named grievance contact if your legal advice calls for one.
+
 ## What it cannot do
 
 It cannot stop screenshots or someone photographing the screen. Anyone with the link (and the phrase, if set) can open it, once. The Privacy Policy and Terms say this plainly.

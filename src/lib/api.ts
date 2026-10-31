@@ -1,5 +1,5 @@
 import { b64urlEncode, MAX_CIPHERTEXT_CHARS } from "./crypto";
-import { getStore } from "./store";
+import { getStore, type Report } from "./store";
 
 export const ID_RE = /^[A-Za-z0-9_-]{22}$/;
 const B64URL_RE = /^[A-Za-z0-9_-]+$/;
@@ -36,4 +36,25 @@ export function validateCreate(body: unknown): CreateBody | string {
 export function clientIp(req: Request): string {
   const fwd = req.headers.get("x-forwarded-for");
   return fwd?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";
+}
+
+export const MAX_REPORT_TEXT = 5_000;
+export const MAX_REPORT_IMAGE = 850_000;
+const REASONS = ["scam", "abuse", "illegal", "other"] as const;
+const SAFE_IMAGE = /^data:image\/(webp|png|jpeg);base64,[A-Za-z0-9+/=]+$/;
+
+/** Returns a clean Report body (without the timestamp) or an error string. */
+export function validateReport(body: unknown): Omit<Report, "at"> | string {
+  if (!body || typeof body !== "object") return "Invalid body";
+  const { reason, kind, text, image } = body as Record<string, unknown>;
+  if (!REASONS.includes(reason as (typeof REASONS)[number])) return "Invalid reason";
+  if (kind === "text") {
+    if (typeof text !== "string" || !text.trim() || text.length > MAX_REPORT_TEXT) return "Invalid text";
+    return { reason: reason as Report["reason"], kind, text };
+  }
+  if (kind === "drawing") {
+    if (typeof image !== "string" || image.length > MAX_REPORT_IMAGE || !SAFE_IMAGE.test(image)) return "Invalid image";
+    return { reason: reason as Report["reason"], kind, image };
+  }
+  return "Invalid kind";
 }

@@ -16,7 +16,7 @@ function inline(text: string): ReactNode {
   });
 }
 
-export default function LegalPage({ doc }: { doc: keyof Legal }) {
+export default function LegalPage({ doc }: { doc: "privacy" | "terms" | "safety" }) {
   const { lang, t } = useT();
   const [loaded, setLoaded] = useState<{ lang: string; legal: Legal }>({ lang: "en", legal: enLegal });
 
@@ -30,12 +30,12 @@ export default function LegalPage({ doc }: { doc: keyof Legal }) {
     };
   }, [lang]);
 
-  const { title, updated, blocks } = loaded.legal[doc];
+  const { title, updated, blocks } = loaded.legal[doc] ?? enLegal[doc as keyof typeof enLegal];
   return (
     <article className="max-w-[62ch] space-y-4 pt-4 [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-bold [&_li]:ms-5 [&_li]:list-disc [&_a]:text-haldi [&_a]:underline [&_a]:underline-offset-4">
       <h1 className="text-4xl font-bold">{title}</h1>
       <p className="text-abhla-dim">{updated}</p>
-      {lang !== "en" && <p className="text-sm text-abhla-dim">{t.legalNote}</p>}
+      {lang !== "en" && loaded.legal[doc] && <p className="text-sm text-abhla-dim">{t.legalNote}</p>}
       {blocks.map((b, i) =>
         "h" in b ? (
           <h2 key={i}>{b.h}</h2>

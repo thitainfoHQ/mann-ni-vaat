@@ -1,9 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-
-// Deliberately English in every language: short, universal, and the one cue people need on the cloth.
-const TAP_LABEL = "Tap to open";
+import { useT } from "@/lib/i18n";
 
 const COLS = 7;
 const ROWS = 9;
@@ -45,6 +43,7 @@ export default function Cloth({
   onTap?: () => void;
   children: ReactNode;
 }) {
+  const { t } = useT();
   const interactive = !untied && !!onTap;
   return (
     <div className={`relative isolate overflow-hidden rounded-[22px] bg-raat-deep ${untied ? "untied" : ""}`}>
@@ -57,7 +56,7 @@ export default function Cloth({
           ? {
               role: "button",
               tabIndex: 0,
-              "aria-label": TAP_LABEL,
+              "aria-label": t.tapToOpen,
               onKeyDown: (e: React.KeyboardEvent) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
@@ -79,7 +78,7 @@ export default function Cloth({
         </div>
         {interactive && (
           <span className="tap-pill absolute inset-x-0 bottom-[16%] mx-auto w-fit rounded-full bg-haldi px-5 py-2 font-display text-lg font-bold text-raat-deep shadow-lg">
-            {TAP_LABEL}
+            {t.tapToOpen}
           </span>
         )}
       </div>

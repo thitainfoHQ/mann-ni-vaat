@@ -3,7 +3,7 @@ import type { Legal } from "./types";
 const brx: Legal = {
   privacy: {
     title: "गोपनीयता नीति",
-    updated: "उनावनि अपडेट: 11/10/2026",
+    updated: "उनावनि अपडेट: 31/10/2026",
     blocks: [
       {
         p: "Mann Ni Vaat जों नों मोनसे गुबुन गाहाइ नाजा सावराइ हाबाइनो हागोन, बे मोनसे खोनाव खालायो आरो उनाव दैथोखा। बे सेबा फोथाइ, फराइसा आरो मोजां नायनायनि थाखाय बियो।",
@@ -46,6 +46,9 @@ const brx: Legal = {
       { h: "सेबा बियोनायफोर" },
       {
         p: "साइट Vercel आव सोलायो (Vercel Web Analytics आरो Speed Insights फारै) आरो एनक्रिप्ट डाटाखौ Upstash Redis आव दोनो। बे बियोनायफोरआ सेबा बिनो IP ठिकानाबाहाइ प्राविधिक डाटाखौ बेफ्रानि नीतिनि सोलोंजों प्रोसेस खालामो।",
+      },
+      {
+        p: "If you use the Report button, the secret you report (its text or drawing) and the reason you pick are sent to us, because you chose to share it. We keep reports for up to 60 days, use them only to look into abuse, and do not record who sent the report.",
       },
       { h: "जोबथा" },
       {

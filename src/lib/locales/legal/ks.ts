@@ -3,7 +3,7 @@ import type { Legal } from "./types";
 const ks: Legal = {
   privacy: {
     title: "پرائیویسی پالیسی",
-    updated: "آخری اپڈیٹ: 11/10/2026",
+    updated: "آخری اپڈیٹ: 31/10/2026",
     blocks: [
       {
         p: "Mann Ni Vaat ذریعہ ہیکو توہہِ اکھ خفیہ پیغام یا تصویر بھیجتھ، یُس صرف اکھ ٲس کھلان چھ تہ پتہ مٹان چھ۔ یہ سروس چھ سیکھنہ، تعلیم تہ تفریح خاطرٕ دِنہ یوان۔",
@@ -46,6 +46,9 @@ const ks: Legal = {
       { h: "سروس فراہم کرن والہ" },
       {
         p: "سایٹ چھ Vercel پیٹھ چلان (Vercel Web Analytics تہ Speed Insights سمیت) تہ انکرپٹ ڈیٹا چھ Upstash Redis منز رٔژھان۔ یِم فراہم کرن والہ چھہ سروس دِنہ خاطرٕ IP ایڈریس ہیتھ تکنیکی ڈیٹا پننہ پننہ پالیسی مطابق پروسیس کران۔",
+      },
+      {
+        p: "If you use the Report button, the secret you report (its text or drawing) and the reason you pick are sent to us, because you chose to share it. We keep reports for up to 60 days, use them only to look into abuse, and do not record who sent the report.",
       },
       { h: "رابطہ" },
       {

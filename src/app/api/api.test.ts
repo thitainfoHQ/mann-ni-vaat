@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { POST as create } from "./create/route";
 import { GET as meta } from "./meta/[id]/route";
 import { POST as open } from "./open/[id]/route";
+import { POST as reportRoute } from "./report/route";
 import { __setStore, MemoryStore } from "@/lib/store";
 import { decryptPayload, encryptPayload, generateLinkKey } from "@/lib/crypto";
 
@@ -104,6 +105,45 @@ describe("read endpoint rate limits", () => {
   it("limits open attempts per IP", async () => {
     let last = 0;
     for (let i = 0; i < 121; i++) last = (await open(withIp("5.5.5.5", "POST"), ctx("A".repeat(22)))).status;
+    expect(last).toBe(429);
+  });
+});
+
+describe("report endpoint", () => {
+  const report = (body: unknown, ip = "4.4.4.4") =>
+    new Request("http://x/api/report", {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-forwarded-for": ip },
+      body: JSON.stringify(body),
+    });
+
+  it("stores a text report with no sender or network details", async () => {
+    const store = new MemoryStore();
+    __setStore(store);
+    const res = await reportRoute(report({ reason: "scam", kind: "text", text: "send OTP to me" }));
+    expect(res.status).toBe(201);
+    expect(store.reports).toHaveLength(1);
+    expect(Object.keys(store.reports[0]).sort()).toEqual(["at", "kind", "reason", "text"]);
+  });
+
+  it("accepts a drawing report and rejects anything that is not an image data URL", async () => {
+    const store = new MemoryStore();
+    __setStore(store);
+    expect((await reportRoute(report({ reason: "abuse", kind: "drawing", image: "data:image/webp;base64,AAAA" }))).status).toBe(201);
+    expect((await reportRoute(report({ reason: "abuse", kind: "drawing", image: "https://evil.example/x.png" }))).status).toBe(400);
+    expect((await reportRoute(report({ reason: "abuse", kind: "drawing", image: "data:text/html;base64,AAAA" }))).status).toBe(400);
+  });
+
+  it("rejects bad input", async () => {
+    expect((await reportRoute(report({ reason: "nope", kind: "text", text: "x" }))).status).toBe(400);
+    expect((await reportRoute(report({ reason: "scam", kind: "text", text: "" }))).status).toBe(400);
+    expect((await reportRoute(report({ reason: "scam", kind: "text", text: "x".repeat(5001) }))).status).toBe(400);
+    expect((await reportRoute(report({ reason: "scam", kind: "video" }))).status).toBe(400);
+  });
+
+  it("rate limits reports per IP", async () => {
+    let last = 0;
+    for (let i = 0; i < 11; i++) last = (await reportRoute(report({ reason: "scam", kind: "text", text: "x" }, "3.3.3.3"))).status;
     expect(last).toBe(429);
   });
 });

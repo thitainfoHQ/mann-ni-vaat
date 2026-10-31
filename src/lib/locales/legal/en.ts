@@ -1,9 +1,9 @@
-import type { Legal } from "./types";
+import type { Legal, LegalDoc } from "./types";
 
-const en: Legal = {
+const en: Legal & { safety: LegalDoc } = {
   privacy: {
     title: "Privacy Policy",
-    updated: "Last updated: 11/10/2026",
+    updated: "Last updated: 31/10/2026",
     blocks: [
       {
         p: "Mann Ni Vaat lets you send one secret message or drawing that opens once and is then deleted. This service is provided for learning, education and entertainment.",
@@ -47,6 +47,9 @@ const en: Legal = {
       {
         p: "The site runs on Vercel (including Vercel Web Analytics and Speed Insights) and keeps encrypted data in Upstash Redis. These providers process technical data such as IP addresses to deliver the service, under their own policies.",
       },
+      {
+        p: "If you use the Report button, the secret you report (its text or drawing) and the reason you pick are sent to us, because you chose to share it. We keep reports for up to 60 days, use them only to look into abuse, and do not record who sent the report.",
+      },
       { h: "Contact" },
       {
         p: "Questions or reports of misuse: {email}. Because we cannot read secrets, we cannot recover or review a secret for you.",
@@ -86,6 +89,47 @@ const en: Legal = {
       { p: "We may change the service or these terms. Using the service after a change means you accept it." },
       { h: "Contact" },
       { p: "Questions or reports: {email}" },
+    ],
+  },
+  safety: {
+    title: "Safety",
+    updated: "Last updated: 31/10/2026",
+    blocks: [
+      {
+        p: "Mann Ni Vaat is for private messages between people who know each other. Here is how to stay safe, and what we do about abuse.",
+      },
+      { h: "Stay safe" },
+      {
+        ul: [
+          "Anyone can send a secret, and we can't tell who sent it. A message that looks like it comes from your bank, a company or the police may be a scam.",
+          "Never share OTPs, passwords or card numbers, and never send money, because of a message here.",
+          "Be careful with any phone number, UPI ID or link inside a secret. Check with the person another way before you act.",
+          "Anything you receive can be copied with a screenshot. Don't send anything you would regret being seen.",
+        ],
+      },
+      { h: "What is not allowed" },
+      {
+        p: "Scams, threats, harassment, blackmail, content that harms children, and anything illegal. See the Terms of Use for the full list.",
+      },
+      { h: "How to report" },
+      {
+        ul: [
+          "After you open a secret, tap Report this secret and choose a reason. Only then is the secret sent to us. We cannot read a secret otherwise.",
+          "You can also write to {email}. We cannot look up a secret from its link, so use the Report button to send us the actual content.",
+        ],
+      },
+      { h: "What we do" },
+      {
+        ul: [
+          "We review reports, and we may limit or block network addresses that misuse the service.",
+          "We keep reports for up to 60 days and do not record who sent them.",
+          "Where the law requires it, we respond to valid requests from the authorities. We can only share the limited technical data we hold, and never the content of a secret that was not reported to us.",
+        ],
+      },
+      { h: "If you are in danger" },
+      {
+        p: "If someone is threatening you, or you think a crime is taking place, contact your local police or call 112 in India. You can report cybercrime at cybercrime.gov.in, and financial fraud on 1930.",
+      },
     ],
   },
 };
