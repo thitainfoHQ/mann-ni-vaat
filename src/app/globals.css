@@ -57,24 +57,54 @@ h3 {
   color: var(--color-raat-deep);
 }
 
-/* ---- bandhani cloth: one rosette = a dot with four petals ---- */
+/* ---- bandhani cloth: one rosette = a dot with four petals. Occasion themes only change these three colours. ---- */
+:root {
+  --cloth-bg: var(--color-bandhani);
+  --cloth-dot: var(--color-haldi);
+  --cloth-knot: #b32339;
+}
+.theme-diwali {
+  --cloth-bg: #c2410c;
+  --cloth-dot: #ffd166;
+  --cloth-knot: #7c2d12;
+}
+.theme-birthday {
+  --cloth-bg: #db2777;
+  --cloth-dot: #fde68a;
+  --cloth-knot: #9d174d;
+}
+.theme-anniversary {
+  --cloth-bg: #7f1d1d;
+  --cloth-dot: #f9a8d4;
+  --cloth-knot: #450a0a;
+}
+.theme-sorry {
+  --cloth-bg: #334155;
+  --cloth-dot: #cbd5e1;
+  --cloth-knot: #1e293b;
+}
+.theme-missyou {
+  --cloth-bg: #4338ca;
+  --cloth-dot: #c7d2fe;
+  --cloth-knot: #312e81;
+}
 .rosette {
   width: 8px;
   height: 8px;
   border-radius: 9999px;
-  background: var(--color-haldi);
+  background: var(--cloth-dot);
   box-shadow:
-    0 -11px 0 -2px var(--color-haldi),
-    0 11px 0 -2px var(--color-haldi),
-    -11px 0 0 -2px var(--color-haldi),
-    11px 0 0 -2px var(--color-haldi);
+    0 -11px 0 -2px var(--cloth-dot),
+    0 11px 0 -2px var(--cloth-dot),
+    -11px 0 0 -2px var(--cloth-dot),
+    11px 0 0 -2px var(--cloth-dot);
   transition:
     transform 520ms cubic-bezier(0.5, 0, 0.75, 0),
     opacity 520ms ease-in;
   transition-delay: var(--d, 0ms);
 }
 .cloth {
-  background: var(--color-bandhani);
+  background: var(--cloth-bg);
   transition: opacity 500ms ease-out;
   transition-delay: 700ms;
 }

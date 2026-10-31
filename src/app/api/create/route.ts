@@ -26,6 +26,7 @@ export async function POST(req: Request) {
     hasPassphrase: !!parsed.salt,
     ...(parsed.salt ? { salt: parsed.salt } : {}),
     ...(parsed.hint ? { hint: parsed.hint } : {}),
+    ...(parsed.opensAt ? { opensAt: parsed.opensAt } : {}),
   });
   return json({ id }, 201);
 }

@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useT } from "@/lib/i18n";
+import type { Theme } from "@/lib/themes";
 
 const COLS = 7;
 const ROWS = 9;
@@ -17,15 +18,15 @@ const cells = Array.from({ length: COLS * ROWS }, (_, i) => {
 function Knot() {
   return (
     <svg viewBox="0 0 64 64" className="knot size-16" aria-hidden="true">
-      <circle cx="32" cy="32" r="30" fill="#b32339" />
+      <circle cx="32" cy="32" r="30" fill="var(--cloth-knot)" />
       <path
         d="M20 38c0-9 7-15 14-15 6 0 10 4 10 9 0 6-5 9-10 9-4 0-7-2-7-5 0-3 2-5 5-5"
         fill="none"
-        stroke="#f4b83d"
+        stroke="var(--cloth-dot)"
         strokeWidth="3.5"
         strokeLinecap="round"
       />
-      <circle cx="32" cy="32" r="2.5" fill="#f4b83d" />
+      <circle cx="32" cy="32" r="2.5" fill="var(--cloth-dot)" />
     </svg>
   );
 }
@@ -37,16 +38,18 @@ function Knot() {
 export default function Cloth({
   untied,
   onTap,
+  theme = "classic",
   children,
 }: {
   untied: boolean;
   onTap?: () => void;
+  theme?: Theme;
   children: ReactNode;
 }) {
   const { t } = useT();
   const interactive = !untied && !!onTap;
   return (
-    <div className={`relative isolate overflow-hidden rounded-[22px] bg-raat-deep ${untied ? "untied" : ""}`}>
+    <div className={`relative isolate overflow-hidden rounded-[22px] bg-raat-deep theme-${theme} ${untied ? "untied" : ""}`}>
       <div className="relative z-0 flex min-h-[26rem] flex-col justify-center p-6">{children}</div>
 
       <div

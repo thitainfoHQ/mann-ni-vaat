@@ -3,7 +3,8 @@ import { b64urlEncode } from "./crypto";
 
 export const TTL_SECONDS = 7 * 24 * 60 * 60;
 
-export type Meta = { hasPassphrase: boolean; salt?: string; hint?: string };
+// `opensAt` (epoch ms) is set when the sender scheduled the reveal; /api/open refuses to hand the secret out before it.
+export type Meta = { hasPassphrase: boolean; salt?: string; hint?: string; opensAt?: number };
 
 /** A secret the receiver chose to share with us because it was abusive, a scam or illegal. */
 export type Report = {

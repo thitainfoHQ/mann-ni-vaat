@@ -7,6 +7,9 @@ import DrawCanvas, { type DrawHandle } from "@/components/DrawCanvas";
 import { btnPrimary, btnQuiet, errorText, field } from "@/components/ui";
 import { encryptPayload, generateLinkKey, type Payload } from "@/lib/crypto";
 import { useT } from "@/lib/i18n";
+import { fill, formatTime, MAX_SCHEDULE_MS, toLocalInput } from "@/lib/schedule";
+import { addSent } from "@/lib/sent";
+import { THEME_KEY, THEME_SWATCH, THEMES, type Theme } from "@/lib/themes";
 
 type Kind = "text" | "drawing";
 const MAX_TEXT = 1000;
@@ -22,7 +25,11 @@ export default function Composer() {
   const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [result, setResult] = useState<{ url: string; phrase: boolean } | null>(null);
+  const [theme, setTheme] = useState<Theme>("classic");
+  const [schedule, setSchedule] = useState(false);
+  const [when, setWhen] = useState("");
+  const [bounds, setBounds] = useState({ min: "", max: "" });
+  const [result, setResult] = useState<{ url: string; phrase: boolean; opensAt?: number } | null>(null);
   const [copied, setCopied] = useState(false);
   const [consentMissing, setConsentMissing] = useState(false);
   const draw = useRef<DrawHandle>(null);
@@ -43,6 +50,14 @@ export default function Composer() {
       payload = { v: 1, kind: "drawing", lang, image };
     }
     if (usePhrase && phrase.trim().length < 4) return setError(t.errPhraseShort);
+    let opensAt: number | undefined;
+    if (schedule) {
+      opensAt = new Date(when).getTime();
+      const now = Date.now();
+      if (!when || Number.isNaN(opensAt) || opensAt < now + 30_000 || opensAt > now + MAX_SCHEDULE_MS) {
+        return setError(t.errSchedule);
+      }
+    }
     if (!consent) {
       setConsentMissing(true);
       consentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -56,12 +71,19 @@ export default function Composer() {
       const res = await fetch("/api/create", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...blob, ...(usePhrase && hint.trim() ? { hint: hint.trim() } : {}) }),
+        body: JSON.stringify({
+          ...blob,
+          ...(usePhrase && hint.trim() ? { hint: hint.trim() } : {}),
+          ...(opensAt ? { opensAt } : {}),
+        }),
       });
       if (res.status === 429) return setError(t.errRate);
       if (!res.ok) return setError(res.status === 400 ? t.errTooLarge : t.errGeneric);
       const { id } = (await res.json()) as { id: string };
-      setResult({ url: `${location.origin}/m/${id}#${key}.${lang}`, phrase: usePhrase });
+      // The language and look ride in the link fragment, so the receiver sees the same cloth. The server never gets them.
+      const url = `${location.origin}/m/${id}#${key}.${lang}${theme === "classic" ? "" : `.${theme}`}`;
+      addSent({ id, url, at: Date.now(), kind, hasPassphrase: usePhrase, opensAt, theme });
+      setResult({ url, phrase: usePhrase, opensAt });
     } catch (err) {
       setError(err instanceof TypeError ? t.errNetwork : t.errGeneric);
     } finally {
@@ -88,6 +110,9 @@ export default function Composer() {
     setConsent(false);
     setConsentMissing(false);
     setCopied(false);
+    setSchedule(false);
+    setWhen("");
+    setTheme("classic");
   }
 
   if (result) {
@@ -96,6 +121,9 @@ export default function Composer() {
         <h1 className="text-3xl font-bold">{t.readyTitle}</h1>
         <p className="mt-2 max-w-[44ch]">{t.readyNote}</p>
         {result.phrase && <p className="mt-2 max-w-[44ch] font-semibold text-haldi">{t.readyPhrase}</p>}
+        {result.opensAt && (
+          <p className="mt-2 max-w-[44ch] font-semibold text-haldi">{fill(t.opensOn, { time: formatTime(result.opensAt, lang) })}</p>
+        )}
 
         <input
           readOnly
@@ -118,9 +146,14 @@ export default function Composer() {
             {copied ? t.copied : t.copy}
           </button>
         </div>
-        <button type="button" onClick={reset} className="mt-5 min-h-11 font-semibold text-haldi underline underline-offset-4">
-          {t.another}
-        </button>
+        <div className="mt-5 flex flex-wrap gap-x-6">
+          <button type="button" onClick={reset} className="min-h-11 font-semibold text-haldi underline underline-offset-4">
+            {t.another}
+          </button>
+          <Link href="/mine" className="inline-flex min-h-11 items-center font-semibold text-haldi underline underline-offset-4">
+            {t.mineTitle}
+          </Link>
+        </div>
       </div>
     );
   }
@@ -169,6 +202,35 @@ export default function Composer() {
             <DrawCanvas ref={draw} />
           </div>
         )}
+      </div>
+
+      <div role="radiogroup" aria-labelledby="theme-title" className="mt-6">
+        <p id="theme-title" className="mb-2 font-semibold">
+          {t.themeLabel}
+        </p>
+        <div className="grid grid-cols-3 gap-2">
+          {THEMES.map((th) => (
+            <button
+              key={th}
+              type="button"
+              role="radio"
+              aria-checked={theme === th}
+              onClick={() => setTheme(th)}
+              className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-2 text-xs font-semibold transition-colors ${
+                theme === th ? "border-haldi bg-haldi/10 text-abhla" : "border-raat-line text-abhla-dim hover:border-abhla-dim"
+              }`}
+            >
+              <span
+                aria-hidden="true"
+                className="grid size-6 place-items-center rounded-full"
+                style={{ background: THEME_SWATCH[th].bg }}
+              >
+                <span className="size-2 rounded-full" style={{ background: THEME_SWATCH[th].dot }} />
+              </span>
+              {t[THEME_KEY[th]]}
+            </button>
+          ))}
+        </div>
       </div>
 
       <section aria-labelledby="phrase-title" className="mt-6 rounded-[18px] border border-dashed border-raat-line p-4">
@@ -231,6 +293,65 @@ export default function Composer() {
               />
               <p className="mt-1 text-sm text-abhla-dim">{t.hintHelp}</p>
             </div>
+          </div>
+        )}
+      </section>
+
+      <section aria-labelledby="schedule-title" className="mt-6 rounded-[18px] border border-dashed border-raat-line p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 id="schedule-title" className="font-display text-lg font-bold">
+              {t.scheduleToggle}
+            </h2>
+            <p className="mt-0.5 text-sm text-abhla-dim">{t.scheduleIntro}</p>
+          </div>
+          <span className="shrink-0 rounded-full border border-raat-line px-2.5 py-0.5 text-xs font-semibold text-abhla-dim">
+            {t.optionalBadge}
+          </span>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={schedule}
+          aria-labelledby="schedule-title"
+          onClick={() => {
+            const next = !schedule;
+            setSchedule(next);
+            if (next) {
+              const now = Date.now();
+              setBounds({ min: toLocalInput(now), max: toLocalInput(now + MAX_SCHEDULE_MS) });
+              // Default to the next midnight: the classic birthday wish.
+              const midnight = new Date();
+              midnight.setHours(24, 0, 0, 0);
+              if (!when) setWhen(toLocalInput(midnight.getTime()));
+            }
+          }}
+          className="mt-3 flex min-h-11 w-full items-center gap-3 text-start"
+        >
+          <span
+            aria-hidden="true"
+            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${schedule ? "bg-haldi" : "bg-raat-line"}`}
+          >
+            <span
+              className={`absolute top-0.5 size-6 rounded-full bg-white transition-all ${schedule ? "start-[22px]" : "start-0.5"}`}
+            />
+          </span>
+          <span className="text-sm font-semibold">{schedule ? t.switchOn : t.switchOff}</span>
+        </button>
+        {schedule && (
+          <div className="mt-3">
+            <label htmlFor="when" className="mb-1 block text-sm font-semibold">
+              {t.scheduleLabel}
+            </label>
+            <input
+              id="when"
+              type="datetime-local"
+              value={when}
+              min={bounds.min}
+              max={bounds.max}
+              onChange={(e) => setWhen(e.target.value)}
+              className={field}
+            />
           </div>
         )}
       </section>

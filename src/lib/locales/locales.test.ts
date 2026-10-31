@@ -16,6 +16,11 @@ describe.each(LANGS.map((l) => l.code))("language %s", (code) => {
     for (const [k, v] of Object.entries(d)) expect(v.trim(), k).not.toBe("");
   });
 
+  it("keeps the {time} placeholder where English has it", async () => {
+    const d = await loadDict(code);
+    for (const k of ["opensOn", "mineMade"] as const) expect(d[k], k).toContain("{time}");
+  });
+
   it("keeps the Privacy and Terms structure and markup", async () => {
     const legal = await loadLegal(code);
     for (const doc of ["privacy", "terms"] as const) {
@@ -44,8 +49,10 @@ describe("language helpers", () => {
   });
   it("reads the key and optional language from a link fragment", () => {
     const key = "A".repeat(43);
-    expect(parseLinkFragment(`#${key}.mr`)).toEqual({ key, lang: "mr" });
-    expect(parseLinkFragment(`#${key}`)).toEqual({ key, lang: null });
-    expect(parseLinkFragment(`#${key}.xx`)).toEqual({ key, lang: null });
+    expect(parseLinkFragment(`#${key}.mr`)).toEqual({ key, lang: "mr", theme: "classic" });
+    expect(parseLinkFragment(`#${key}`)).toEqual({ key, lang: null, theme: "classic" });
+    expect(parseLinkFragment(`#${key}.xx`)).toEqual({ key, lang: null, theme: "classic" });
+    expect(parseLinkFragment(`#${key}.hi.diwali`)).toEqual({ key, lang: "hi", theme: "diwali" });
+    expect(parseLinkFragment(`#${key}.hi.nope`)).toEqual({ key, lang: "hi", theme: "classic" });
   });
 });

@@ -50,6 +50,9 @@ const en: Legal & { safety: LegalDoc } = {
       {
         p: "If you use the Report button, the secret you report (its text or drawing) and the reason you pick are sent to us, because you chose to share it. We keep reports for up to 60 days, use them only to look into abuse, and do not record who sent the report.",
       },
+      {
+        p: "If you schedule a reveal, the opening time is stored with the secret, unencrypted, so we can keep it locked until then. This browser also keeps a list of the secrets you create, including the links of ones not yet opened, so you can find them again. That list stays on your device only, and you can delete it at any time on the My secrets page.",
+      },
       { h: "Contact" },
       {
         p: "Questions or reports of misuse: {email}. Because we cannot read secrets, we cannot recover or review a secret for you.",

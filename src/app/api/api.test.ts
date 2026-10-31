@@ -147,3 +147,37 @@ describe("report endpoint", () => {
     expect(last).toBe(429);
   });
 });
+
+describe("scheduled reveal", () => {
+  const soon = () => Date.now() + 60 * 60 * 1000;
+  const body = (extra: object) => ({ ct: "A".repeat(40), ...extra });
+
+  it("keeps the secret locked, and not burned, until the time arrives", async () => {
+    const res = await create(post(body({ opensAt: soon() })));
+    const { id } = (await res.json()) as { id: string };
+
+    const early = await open(new Request("http://x", { method: "POST" }), ctx(id));
+    expect(early.status).toBe(425);
+    expect(((await early.json()) as { tooEarly: boolean }).tooEarly).toBe(true);
+
+    // Still there: meta works and the secret has not been taken.
+    const m = (await (await meta(new Request("http://x"), ctx(id))).json()) as { opensAt: number; now: number };
+    expect(m.opensAt).toBeGreaterThan(m.now);
+  });
+
+  it("opens normally once the time has passed", async () => {
+    const store = new MemoryStore();
+    __setStore(store);
+    await store.put("B".repeat(22), "CT".repeat(20), { hasPassphrase: false, opensAt: Date.now() - 1000 });
+    const res = await open(new Request("http://x", { method: "POST" }), ctx("B".repeat(22)));
+    expect(res.status).toBe(200);
+  });
+
+  it("rejects a time too far ahead or not a number, and treats a past time as open now", async () => {
+    expect((await create(post(body({ opensAt: Date.now() + 5 * 24 * 60 * 60 * 1000 })))).status).toBe(400);
+    expect((await create(post(body({ opensAt: "tomorrow" })))).status).toBe(400);
+    const past = await create(post(body({ opensAt: Date.now() - 60_000 })));
+    const { id } = (await past.json()) as { id: string };
+    expect((await open(new Request("http://x", { method: "POST" }), ctx(id))).status).toBe(200);
+  });
+});

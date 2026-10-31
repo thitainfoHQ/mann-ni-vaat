@@ -46,6 +46,12 @@ Copy `.env.example` to `.env.local`.
 2. The receiver opens `/m/<id>#<key>`. The page calls `GET /api/meta/<id>` (never deletes anything, so link-preview bots are harmless).
 3. Tapping "Untie the knot" calls `POST /api/open/<id>`, which atomically returns and deletes the ciphertext. The browser decrypts it locally.
 
+## Scheduled reveal, looks and My secrets
+
+- **Scheduled reveal:** the sender can pick a time up to 4 days ahead. The opening time is stored (unencrypted) in the secret's meta, and `POST /api/open` answers `425` without burning the secret until then. The receiver sees a countdown that follows the server's clock. The limit is 4 days because a secret still expires 7 days after creation, which keeps the Privacy Policy true; raising it means changing that text in every language.
+- **Looks:** Classic, Diwali, Birthday, Anniversary, Sorry, I miss you. They only recolour the cloth. The look travels in the link fragment (`#key.lang.theme`), so the server never learns the occasion. Add a theme in `src/lib/themes.ts`, `globals.css` and the `theme*` strings.
+- **My secrets (`/mine`):** a list kept only in the sender's browser (localStorage `mnv-sent`). Waiting secrets keep their link so it can be copied or shared again; once the server no longer has one it is marked Opened (or "Opened or expired" after 7 days) and its link is dropped. Finished entries are removed after 30 days. Status comes from the same `GET /api/meta/<id>` a receiver uses.
+
 ## Languages
 
 English, Assamese, Bengali, Bodo, Dogri, Gujarati, Hindi, Kannada, Kashmiri, Konkani, Maithili, Malayalam, Manipuri (Meitei), Marathi, Nepali, Odia, Punjabi, Sanskrit, Santali, Sindhi, Tamil, Telugu, Urdu.

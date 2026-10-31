@@ -9,5 +9,6 @@ export async function GET(req: Request, ctx: RouteContext<"/api/meta/[id]">) {
   if (await rateLimited(req, "meta", 300)) return json({ error: "Too many requests" }, 429);
   const meta = await getStore().getMeta(id);
   if (!meta) return json({ exists: false }, 404);
-  return json({ exists: true, ...meta });
+  // `now` lets the receiver's countdown follow our clock instead of their phone's.
+  return json({ exists: true, ...meta, now: Date.now() });
 }

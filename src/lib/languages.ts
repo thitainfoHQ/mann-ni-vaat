@@ -1,3 +1,5 @@
+import { isTheme, type Theme } from "./themes";
+
 // The 22 languages of India's Eighth Schedule, plus English. `name` is written in the language's own script.
 export const LANGS = [
   { code: "en", name: "English" },
@@ -46,10 +48,10 @@ export function matchLang(tag: string): Lang | null {
 }
 
 /**
- * Secret links look like `#<key>` or `#<key>.<lang>`. The key is base64url, so "." can't appear in it.
- * The optional language only picks the receiver's default language; it is not secret.
+ * Secret links look like `#<key>`, `#<key>.<lang>` or `#<key>.<lang>.<theme>`. The key is base64url, so "." can't
+ * appear in it. The language and theme only choose how the receiver's page looks; neither is secret.
  */
-export function parseLinkFragment(hash: string): { key: string; lang: Lang | null } {
-  const [key, lang] = hash.replace(/^#/, "").split(".");
-  return { key, lang: isLang(lang) ? lang : null };
+export function parseLinkFragment(hash: string): { key: string; lang: Lang | null; theme: Theme } {
+  const [key, lang, theme] = hash.replace(/^#/, "").split(".");
+  return { key, lang: isLang(lang) ? lang : null, theme: isTheme(theme) ? theme : "classic" };
 }

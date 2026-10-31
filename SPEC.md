@@ -1,4 +1,4 @@
-# Mann Ni Vaat (મનની વાત): Product Spec (v0.6)
+# Mann Ni Vaat (મનની વાત): Product Spec (v0.7)
 
 Name meaning: "What is in my heart/mind", a warm Gujarati phrase for something you want to tell one person. Use the Gujarati script (મનની વાત) in the logo and headings, with "Mann Ni Vaat" as the roman wordmark. Not affiliated with any radio programme or government body; keep the tone personal and romantic.
 Tagline: *Mann ni vaat, bas ek vaar.* (What is in my heart, just once.)
@@ -86,6 +86,12 @@ Must cover:
 - Contact / abuse report address: info@thitainfo.com.
 - Recommend a quick legal review if it grows beyond a hobby project.
 
+## 6a. Scheduled reveal, looks, My secrets
+
+- **Scheduled reveal (optional):** sender picks a time from 1 minute to 4 days ahead (default: next midnight). Stored as `opensAt` in `meta:<id>`. Before that time `POST /api/open` returns 425 and keeps the secret; `GET /api/meta` returns `opensAt` and the server's `now` so the receiver's countdown is correct. The secret still expires 7 days after creation (hence the 4-day limit).
+- **Looks:** classic, diwali, birthday, anniversary, sorry, missyou. Colours only. Carried in the link fragment (`#key.lang.theme`), never sent to the server.
+- **My secrets (`/mine`):** local-only list (localStorage) of secrets this device created, with status Waiting / Opens at / Opened / Opened or expired, copy and WhatsApp re-share while waiting, remove and clear. Not a sender notification: the sender must visit the page, and nothing is stored server-side.
+
 ## 6b. Abuse and safety
 
 - Receiver page shows a warning before opening: anyone can send, the sender is unknown, never share OTPs/passwords/money.
@@ -111,7 +117,7 @@ Must cover:
 
 ## 9. Out of scope for v1
 
-Accounts, notifications to the sender, read receipts, replies inside a thread, voice or video, image upload from the gallery, native apps.
+Accounts, push notifications to the sender, server-side read receipts (a local My secrets list is in v1), replies inside a thread, voice or video, image upload from the gallery, native apps.
 
 ## 10. Tech stack
 

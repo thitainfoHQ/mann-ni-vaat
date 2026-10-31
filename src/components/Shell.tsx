@@ -47,6 +47,9 @@ export default function Shell({ children }: { children: ReactNode }) {
           <Link href="/terms" className="underline-offset-4 hover:text-abhla hover:underline">
             {t.terms}
           </Link>
+          <Link href="/mine" className="underline-offset-4 hover:text-abhla hover:underline">
+            {t.footMine}
+          </Link>
           <Link href="/safety" className="underline-offset-4 hover:text-abhla hover:underline">
             {t.safetyLink}
           </Link>
