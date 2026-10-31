@@ -75,6 +75,8 @@ English, Assamese, Bengali, Bodo, Dogri, Gujarati, Hindi, Kannada, Kashmiri, Kon
 
 The idea is a letter tied in a potli (bandhani bundle). A night-sky page with a faint diya glow; the **paper** (`.paper`, `.ruled` in `globals.css`) is the only light surface and is used for the message; the **torana** (`.torana`, a string of bandhani dots) divides header and footer; the cloth has a sheen and a shorter `compact` form for the home page. The composer keeps the message first and folds look, secret phrase and schedule into one quiet list (`Row` in `Composer.tsx`). Fonts stay Baloo/Hind because they cover the scripts we support; change the scale, not the families. Check any layout change with a long-script language (Malayalam, Tamil) and a right-to-left one (Urdu).
 
+The home page opens on a sample letter that the cloth then ties itself over (skipped for reduced motion), shows occasion chips ("What will you say?") that open the composer with that look, and gives returning senders a "My secrets" link with a count.
+
 ## Look and feel details
 
 - **Icons:** the knot logo is `src/app/icon.svg` (also exported as `src/app/favicon.ico`, `src/app/apple-icon.png`, `public/icon-192.png` and `public/icon-512.png`). Re-export the PNG/ICO from the SVG if you change the logo. `src/app/manifest.ts` lets people add the site to their home screen.

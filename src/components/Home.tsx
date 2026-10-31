@@ -1,15 +1,38 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Cloth from "@/components/Cloth";
 import { btnPrimary, btnQuiet } from "@/components/ui";
 import { useT } from "@/lib/i18n";
+import { loadSent } from "@/lib/sent";
+import { THEME_KEY, THEME_SWATCH, THEMES } from "@/lib/themes";
 import type { HomeContent } from "@/lib/locales/home/types";
 
 export default function Home({ content }: { content?: HomeContent | null }) {
   const { t } = useT();
-  const [untied, setUntied] = useState(false);
+  // The demo opens on a sample letter, then the cloth ties itself over it: the product's whole idea in two seconds.
+  // Tapping the tied cloth opens it again and shows what the receiver would read.
+  // Anyone who prefers reduced motion gets the tied cloth straight away.
+  const [untied, setUntied] = useState(true);
+  const [intro, setIntro] = useState(true);
+  const [mine, setMine] = useState<number | null>(null);
+
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = setTimeout(() => {
+      setUntied(false);
+      setIntro(false);
+    }, reduce ? 0 : 1800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Someone who has made secrets here before gets a way back to them.
+  useEffect(() => {
+    const total = loadSent().length;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMine(total > 0 ? total : null);
+  }, []);
 
   return (
     <div className="pt-6">
@@ -18,14 +41,18 @@ export default function Home({ content }: { content?: HomeContent | null }) {
 
       <div className="mt-7">
         <Cloth compact untied={untied} onTap={() => setUntied(true)}>
-          <p className="text-center font-display text-2xl font-bold leading-snug text-abhla">{t.demoOpened}</p>
-          <button
-            type="button"
-            onClick={() => setUntied(false)}
-            className="mx-auto mt-5 min-h-11 px-4 font-semibold text-haldi underline underline-offset-4"
-          >
-            {t.demoAgain}
-          </button>
+          <div className="paper p-5 text-center">
+            <p className="font-display text-2xl font-bold leading-snug">{intro ? t.demoLetter : t.demoOpened}</p>
+            {!intro && (
+              <button
+                type="button"
+                onClick={() => setUntied(false)}
+                className="mx-auto mt-3 min-h-11 px-4 font-semibold text-bandhani-dark underline underline-offset-4"
+              >
+                {t.demoAgain}
+              </button>
+            )}
+          </div>
         </Cloth>
       </div>
 
@@ -38,7 +65,38 @@ export default function Home({ content }: { content?: HomeContent | null }) {
         </Link>
       </div>
 
-      <ul className="mt-8 divide-y divide-raat-line rounded-2xl border border-raat-line bg-raat-deep/50">
+      {mine !== null && (
+        <Link
+          href="/mine"
+          className="mt-3 flex min-h-12 items-center justify-between gap-3 rounded-2xl border border-raat-line px-4 font-semibold hover:border-abhla-dim"
+        >
+          {t.mineTitle}
+          <span className="grid min-w-7 place-items-center rounded-full bg-haldi px-2 text-sm font-bold text-raat-deep">{mine}</span>
+        </Link>
+      )}
+
+      <section aria-labelledby="ideas-title" className="mt-9">
+        <h2 id="ideas-title" className="font-display text-xl font-bold">
+          {t.ideasTitle}
+        </h2>
+        <ul className="mt-3 flex flex-wrap gap-2">
+          {THEMES.filter((th) => th !== "classic").map((th) => (
+            <li key={th}>
+              <Link
+                href={`/new?theme=${th}`}
+                className="inline-flex min-h-12 items-center gap-2.5 rounded-full border border-raat-line bg-raat-deep/50 ps-2.5 pe-4 font-semibold transition-colors hover:border-abhla-dim"
+              >
+                <span aria-hidden="true" className="grid size-7 place-items-center rounded-full" style={{ background: THEME_SWATCH[th].bg }}>
+                  <span className="size-2 rounded-full" style={{ background: THEME_SWATCH[th].dot }} />
+                </span>
+                {t[THEME_KEY[th]]}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <ul className="mt-9 divide-y divide-raat-line rounded-2xl border border-raat-line bg-raat-deep/50">
         {(
           [
             [t.fact1, <LockIcon key="l" />],
