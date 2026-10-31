@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Suspense, useEffect, type ReactNode } from "react";
 import Knot from "@/components/Knot";
 import { CONTACT_EMAIL } from "@/lib/config";
+import { OCCASIONS } from "@/lib/occasions";
 import { PICKER_LANGS, useT, type Dict, type Lang } from "@/lib/i18n";
 import { HOME_LANGS, homePath } from "@/lib/seo";
 
@@ -82,10 +83,10 @@ function LangPicker() {
 }
 
 export default function Shell({ children }: { children: ReactNode }) {
-  const { setLang, t } = useT();
+  const { setLang, t, lang } = useT();
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-4 pb-8">
+    <div className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col px-4 pb-8 sm:px-6 lg:px-8">
       <header className="pt-4">
         <div className="flex items-center justify-between pb-3">
           <Link href="/" className="flex items-center gap-2.5 font-display text-xl font-bold leading-none text-abhla">
@@ -105,26 +106,37 @@ export default function Shell({ children }: { children: ReactNode }) {
       </Suspense>
       <main className="flex-1">{children}</main>
 
-      <footer className="mt-14 text-sm text-abhla-dim">
-        <div className="torana mb-5" aria-hidden="true" />
-        <nav className="flex flex-wrap gap-x-5 gap-y-2">
-          <Link href="/privacy" className="underline-offset-4 hover:text-abhla hover:underline">
-            {t.privacy}
-          </Link>
-          <Link href="/terms" className="underline-offset-4 hover:text-abhla hover:underline">
-            {t.terms}
-          </Link>
-          <Link href="/mine" className="underline-offset-4 hover:text-abhla hover:underline">
-            {t.footMine}
-          </Link>
-          <Link href="/safety" className="underline-offset-4 hover:text-abhla hover:underline">
-            {t.safetyLink}
-          </Link>
-          <a href={`mailto:${CONTACT_EMAIL}`} className="underline-offset-4 hover:text-abhla hover:underline">
+      <footer className="mt-16 text-sm text-abhla-dim">
+        <div className="torana mb-6" aria-hidden="true" />
+        <nav aria-label="Mann Ni Vaat" className="flex flex-wrap gap-x-6 gap-y-2">
+          {(
+            [
+              ["/new?type=text", t.writeCta],
+              ["/new?type=drawing", t.drawCta],
+              ["/mine", t.footMine],
+              ["/safety", t.safetyLink],
+              ["/privacy", t.privacy],
+              ["/terms", t.terms],
+            ] as const
+          ).map(([href, label]) => (
+            <Link key={href} href={href} className="inline-flex min-h-8 items-center underline-offset-4 hover:text-abhla hover:underline">
+              {label}
+            </Link>
+          ))}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex min-h-8 items-center underline-offset-4 hover:text-abhla hover:underline">
             {t.footContact}
           </a>
         </nav>
-        <p className="mt-3">{t.footNote}</p>
+        {lang === "en" && (
+          <nav aria-label="Ideas" className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
+            {OCCASIONS.map((o) => (
+              <Link key={o.slug} href={`/for/${o.slug}`} className="inline-flex min-h-8 items-center underline-offset-4 hover:text-abhla hover:underline">
+                {o.label}
+              </Link>
+            ))}
+          </nav>
+        )}
+        <p className="mt-4">{t.footNote}</p>
       </footer>
     </div>
   );

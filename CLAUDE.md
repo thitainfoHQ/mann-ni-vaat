@@ -28,6 +28,7 @@ Tests are node-environment vitest; `@/` is aliased to `src/`. API tests call the
 ## Routing layout (two root layouts)
 
 - `src/app/(app)/` is the root layout for `/`, `/new`, `/m/[id]`, `/mine`, `/privacy`, `/terms`, `/safety` (language chosen in the browser).
+- Inside `(app)`, the home page is full width while `(app)/(inner)/` wraps every other page in a single `max-w-xl` column; put new inner pages under `(inner)`. The shell itself is `max-w-6xl`.
 - `src/app/[lang]/` is the root layout for the per-language home pages (`/hi`, `/gu`, ...): server-rendered in that language, seeded `LangProvider`, `hreflang`. `/en` redirects to `/`. Moving between the two root layouts is a full page load.
 - Shared pieces: `RootDocument` (html/body/fonts/analytics), `src/lib/seo.ts`, `src/lib/site.ts`, `Home` component, `src/lib/og.tsx`.
 - Each root layout needs its **own** `opengraph-image.tsx` (a file at `src/app/` root is not inherited by route groups). Both call `renderOgImage()`; keep the card free of anything about a secret.

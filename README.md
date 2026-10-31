@@ -75,6 +75,8 @@ English, Assamese, Bengali, Bodo, Dogri, Gujarati, Hindi, Kannada, Kashmiri, Kon
 
 The idea is a letter tied in a potli (bandhani bundle). A night-sky page with a faint diya glow; the **paper** (`.paper`, `.ruled` in `globals.css`) is the only light surface and is used for the message; the **torana** (`.torana`, a string of bandhani dots) divides header and footer; the cloth has a sheen and a shorter `compact` form for the home page. The composer keeps the message first and folds look, secret phrase and schedule into one quiet list (`Row` in `Composer.tsx`). Fonts stay Baloo/Hind because they cover the scripts we support; change the scale, not the families. Check any layout change with a long-script language (Malayalam, Tamil) and a right-to-left one (Urdu).
 
+On a wide screen the home page is two columns (headline, buttons and occasion chips beside the tying demo), then an "Everything in one place" grid of feature tiles that link into the app, the steps, the FAQ in two columns, a grid of every language (each links to its own home page), and a "share Mann Ni Vaat" band. The footer lists every page. All other pages stay one readable column (`src/app/(app)/(inner)/layout.tsx`). No third-party ads: this is a privacy product.
+
 The home page opens on a sample letter that the cloth then ties itself over (skipped for reduced motion), shows occasion chips ("What will you say?") that open the composer with that look, and gives returning senders a "My secrets" link with a count.
 
 ## Look and feel details
